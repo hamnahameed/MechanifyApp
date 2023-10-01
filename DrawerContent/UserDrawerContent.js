@@ -1,9 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView} from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView,Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 
 
 const UserDrawerContent = ({ navigation ,username}) => {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  // Function to handle logout
+  const handleLogout = () => {
+    // Implement your logout logic here
+    // For example, you can clear user data, reset authentication, etc.
+    // Then, close the modal and navigate to the login screen
+    setModalVisible(false);
+    // Implement your navigation logic here
+  };
   return (
     
     <View style={{ flex: 1 }}>

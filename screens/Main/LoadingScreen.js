@@ -1,40 +1,41 @@
-// import React, { useState, useEffect } from 'react';
-// import { View, Animated, StyleSheet, Dimensions } from 'react-native';
-// import Svg, { Line } from 'react-native-svg';
+import React, { useState, useEffect } from 'react';
+import { View, Animated, StyleSheet, Dimensions ,Text} from 'react-native';
+import Svg, { Line } from 'react-native-svg';
 
-// const LoadingScreen = () => {
-//   const [fillValue] = useState(new Animated.Value(0));
-//   const screenWidth = Dimensions.get('window').width;
+const LoadingScreen = () => {
+  const [fillValue] = useState(new Animated.Value(0));
+  const screenWidth = Dimensions.get('window').width;
 
-//   useEffect(() => {
-//     Animated.timing(fillValue, {
-//       toValue: 1,
-//       duration: 3000, // Set the duration of the filling animation
-//       useNativeDriver: false, // Make sure to set this to false for SVG animations
-//     }).start();
-//   }, []);
+  useEffect(() => {
+    Animated.timing(fillValue, {
+      toValue: 1,
+      duration: 3000, // Set the duration of the filling animation
+      useNativeDriver: false, // Make sure to set this to false for SVG animations
+    }).start();
+  }, []);
 
-//   const fill = fillValue.interpolate({
-//     inputRange: [0, 1],
-//     outputRange: [0, screenWidth],
-//   });
+  const fill = fillValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, screenWidth],
+  });
 
-//   return (
-//     <View style={styles.container}>
-//       <Svg width={screenWidth} height={10}>
-//       <line x1="10" y1="10" x2="90" y2="50" stroke="black" />
-//       </Svg>
-//     </View>
-//   );
-// };
+  return (
+    <View style={styles.container}>
+      <Svg width={screenWidth} height={50}>
+      <Line x1="20" y1="10" x2="100" y2="10" stroke="black" />
+      </Svg>
+      <Text>Loading</Text>
+    </View>
+  );
+};
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'white',
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+});
 
-// export default LoadingScreen;
+export default LoadingScreen;

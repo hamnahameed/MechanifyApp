@@ -1,9 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView} from 'react-native';
+import React,{useState} from 'react';
+import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView,Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 
 
 const MechanicDrawerContent = ({ navigation }) => {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  // Function to handle logout
+  const handleLogout = () => {
+    // Implement your logout logic here
+    // For example, you can clear user data, reset authentication, etc.
+    // Then, close the modal and navigate to the login screen
+    setModalVisible(false);
+    // Implement your navigation logic here
+  };
   return (
     
     <View style={{ flex: 1 }}>
@@ -30,15 +41,15 @@ const MechanicDrawerContent = ({ navigation }) => {
       <View>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('ShopAccountScreen')}>
+        onPress={() => navigation.navigate('MechanicAccountScreen')}>
         <Icon name="user" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Account</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
-        <Icon name="money" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Transaction Management</Text>
+        <Icon name="envelope" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Service request</Text>
       </TouchableOpacity>
     
       <TouchableOpacity
@@ -51,6 +62,12 @@ const MechanicDrawerContent = ({ navigation }) => {
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
         <Icon name="clipboard" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Service History</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
+        onPress={() => navigation.navigate('')}>
+        <Icon name="warehouse" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Inventory</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -64,6 +81,12 @@ const MechanicDrawerContent = ({ navigation }) => {
         onPress={() => navigation.navigate('')}>
         <Icon name="comment" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Chat</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
+        onPress={() => navigation.navigate('')}>
+        <Icon name="money" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Transactions</Text>
       </TouchableOpacity>
 
       <View

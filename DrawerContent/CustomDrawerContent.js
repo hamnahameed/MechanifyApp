@@ -10,11 +10,9 @@ const CustomDrawerContent = ({ navigation }) => {
   
     // Function to handle logout
     const handleLogout = () => {
-      // Implement your logout logic here
-      // For example, you can clear user data, reset authentication, etc.
-      // Then, close the modal and navigate to the login screen
+    
       setModalVisible(false);
-      // Implement your navigation logic here
+      
     };
 
 

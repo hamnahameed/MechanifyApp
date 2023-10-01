@@ -8,7 +8,7 @@ import {
     Text,
     StyleSheet
 } from 'react-native';
-import CustomDrawerContent from '../../drawer/CustomDrawerContent';
+import CustomDrawerContent from '../../DrawerContent/CustomDrawerContent';
 
 
 const LoginScreen = ({navigation}) => { // login functioanlity
@@ -19,24 +19,21 @@ const LoginScreen = ({navigation}) => { // login functioanlity
 
 // Login functionality
     const handleLogin = ({props}) => {
-        // Dummy login logic (Replace this with actual authentication)
-        // const dummyUsername = 'abc';
         const dummyPassword = '123';
 
         // Check if username and password match dummy data
         if (username === "admin" && password === dummyPassword) {
-           navigation.navigate('AdminAccountScreen')
-           //navigation.navigate('ProfileScreen')
-          //  navigation.navigate('AppNavigator',{paramKey: username});
-
+           navigation.navigate('Admin')
 
         } else if (username === "user" && password === dummyPassword) {
-            navigation.navigate('UserAccountScreen');
+            navigation.navigate('User');
 
         } else if (username === "mechanic" && password === dummyPassword) {
-            navigation.navigate('MechanicAccountScreen');
+            navigation.navigate('Mechanic');
+
         } else if (username === "shop" && password === dummyPassword) {
-            navigation.navigate('ShopAccountScreen');
+            navigation.navigate('Shop');
+
         } else {
             alert('Invalid username or password');
         }

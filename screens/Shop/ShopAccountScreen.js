@@ -33,7 +33,7 @@ const ShopAccountScreen = () => {
       <TouchableOpacity onPress={openDrawer}>
       <Icon name="bars"
                         size={30}
-                        color="#1697C7" top={5}/>
+                        color="#1697C7" top={5} left={30}/>
       </TouchableOpacity>
      
       <Image style={

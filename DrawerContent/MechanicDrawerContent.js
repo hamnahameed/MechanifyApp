@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView,Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 
 const MechanicDrawerContent = ({ navigation }) => {
@@ -31,7 +32,7 @@ const MechanicDrawerContent = ({ navigation }) => {
        {/* User Icon and Name */}
        <View style={styles.userContainer}>
         <View style={styles.userIconContainer}>
-          <Icon name="user" size={40} color="black" />
+          <Icon name="user" size={40} color="black" onPress={()=>navigation.navigate('MechanicAccountScreen')}/>
         </View>
         <Text style={styles.userName}>John Doe</Text>
       </View>
@@ -39,24 +40,31 @@ const MechanicDrawerContent = ({ navigation }) => {
       {/* Drawer Items */}
       <ScrollView>
       <View>
+      
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('MechanicAccountScreen')}>
+        onPress={() => navigation.navigate('MechanicProfile')}>
         <Icon name="user" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Account</Text>
+        <Text style={{ marginLeft: 10 }}>My profile</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('')}>
-        <Icon name="envelope" size={20} color={'#1697C7'}/>
+        onPress={() => {
+  navigation.navigate('ServiceRequestsScreen'); 
+  navigation.navigate('TabNavigator'); 
+}}>
+        <Icon name="wrench" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Service request</Text>
       </TouchableOpacity>
     
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('')}>
-        <Icon name="map-marker" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Location Management</Text>
+        onPress={() => {
+        navigation.navigate('SettingScreen'); 
+         
+}}>
+        <MaterialIcon name="settings" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Settings</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
@@ -67,7 +75,7 @@ const MechanicDrawerContent = ({ navigation }) => {
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
-        <Icon name="warehouse" size={20} color={'#1697C7'}/>
+        <Icon name="clipboard" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Inventory</Text>
       </TouchableOpacity>
       <TouchableOpacity

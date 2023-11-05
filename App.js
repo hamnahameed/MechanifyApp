@@ -18,11 +18,12 @@ const Stack = createStackNavigator();
 
 
 const App=(props)=>{
-  const username = props.route?.params?.username || 'default';
+  
 
   return(
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
+
     <Stack.Screen name='Auth' component={AuthStack} options={{ headerShown: false }} />
     <Stack.Screen name='Admin' component={AdminStack} options={{ headerShown: false }} />
     <Stack.Screen name='User' component={UserStack} options={{ headerShown: false }} />

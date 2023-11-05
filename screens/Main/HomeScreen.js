@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../../assets/logo2.png")}
             style={styles.logo}
           />
-          <Text style={styles.slogan}>Everything you need is in one place</Text>
+          <Text style={styles.slogan}>Mechanify Car Repair Anytime Anywhere </Text>
           </View>
   
   {/* button */}

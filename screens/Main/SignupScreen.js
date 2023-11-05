@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     View,
     ImageBackground,
@@ -6,14 +6,32 @@ import {
     TextInput,
     TouchableOpacity,
     Text,
-    StyleSheet
+    StyleSheet,
+    
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { FontAwesome } from '@expo/vector-icons'; // You can use any icon library you prefer
 
 
-const SignupScreen = ({navigation}) => {
+const SignupScreen = ({ navigation }) => {
     const handleSignUp = () => {
         navigation.navigate('Login'); // Navigate to SignUp screen
     };
+
+    const [selectedRole, setSelectedRole] = useState('user'); // Default role is 'user'
+
+  const handleRoleChange = (role) => {
+    setSelectedRole(role);
+    
+  };
+
+  const handleSubmit = () => {
+    // Here, you can use the `selectedRole` state to determine which role the user selected.
+    // You can send this value to your backend for user registration.
+
+    console.log('Selected Role:', selectedRole);
+    // Perform the signup logic based on the selected role.
+  };
     return (
 
         // background
@@ -21,29 +39,29 @@ const SignupScreen = ({navigation}) => {
             styles.container
         }>
             <ImageBackground source={
-                    require('../../assets/bg.jpeg')
-                }
+                require('../../assets/bg.jpeg')
+            }
                 style={
                     styles.backgroundImage
-            }>
+                }>
                 <View style={
                     styles.logoContainer
                 }>
 
-                {/* logo */}
+                    {/* logo */}
                     <View style={
                         styles.logo
                     }>
                         <Image source={
-                                require('../../assets/logo2.png')
-                            }
+                            require('../../assets/logo2.png')
+                        }
                             style={
                                 styles.logoImage
-                            }/>
+                            } />
                     </View>
                 </View>
 
-{/* signup form  */}
+                {/* signup form  */}
                 <View style={
                     styles.formContainer
                 }>
@@ -55,20 +73,23 @@ const SignupScreen = ({navigation}) => {
                         styles.inputContainer
                     }>
                         <Image source={
-                                require('../../assets/userIcon.png')
-                            }
+                            require('../../assets/userIcon.png')
+                        }
                             style={
                                 styles.inputIcon
-                            }/>
+                            } />
+
                         <TextInput style={
-                                styles.input
-                            }
+                            styles.input
+                        }
                             placeholder="username"
                             placeholderTextColor="black"
                             onChangeText={
                                 (text) => setUsername(text)
-                            }/>
+                            } />
                     </View>
+
+
                     <Text style={
                         styles.placeholder
                     }>Email Address</Text>
@@ -76,20 +97,21 @@ const SignupScreen = ({navigation}) => {
                         styles.inputContainer
                     }>
                         <Image source={
-                                require('../../assets/email.png')
-                            }
+                            require('../../assets/email.png')
+                        }
                             style={
                                 styles.inputIcon
-                            }/>
+                            } />
                         <TextInput style={
-                                styles.input
-                            }
+                            styles.input
+                        }
                             placeholder="email"
                             placeholderTextColor="black"
                             onChangeText={
                                 (text) => setEmail(text)
-                            }/>
+                            } />
                     </View>
+
                     <Text style={
                         styles.placeholder
                     }>Password</Text>
@@ -97,20 +119,20 @@ const SignupScreen = ({navigation}) => {
                         styles.inputContainer
                     }>
                         <Image source={
-                                require('../../assets/passIcon.png')
-                            }
+                            require('../../assets/passIcon.png')
+                        }
                             style={
                                 styles.inputIcon
-                            }/>
+                            } />
                         <TextInput style={
-                                styles.input
-                            }
+                            styles.input
+                        }
                             placeholder="password"
                             placeholderTextColor="black"
                             secureTextEntry
                             onChangeText={
                                 (text) => setPassword(text)
-                            }/>
+                            } />
                     </View>
                     <Text style={
                         styles.placeholder
@@ -119,25 +141,51 @@ const SignupScreen = ({navigation}) => {
                         styles.inputContainer
                     }>
                         <Image source={
-                                require('../../assets/passIcon.png')
-                            }
+                            require('../../assets/passIcon.png')
+                        }
                             style={
                                 styles.inputIcon
-                            }/>
+                            } />
                         <TextInput style={
-                                styles.input
-                            }
+                            styles.input
+                        }
                             placeholder="confirm password"
                             placeholderTextColor="black"
                             secureTextEntry
                             onChangeText={
                                 (text) => setPassword(text)
-                            }/>
-                    </View>
+                            } />
 
-                    <TouchableOpacity style={
-                            styles.loginButton
+                    </View>
+ <Text
+ style={
+                        styles.placeholder
+                    }>Login As</Text>
+
+                    <View style={[styles.inputContainer,{height:50}] }>
+      <Picker style={
+                            styles.input
+                           
                         }
+                        selectedValue={selectedRole}
+        onValueChange={(itemValue, itemIndex) => handleRoleChange(itemValue)}
+      
+
+      >
+      
+     
+        <Picker.Item label="User" value="user"  />
+        <Picker.Item label="Mechanic" value="mechanic" />
+        <Picker.Item label="Shop Owner" value="shopOwner" />
+      </Picker>
+      </View>
+
+
+
+      
+                    <TouchableOpacity style={
+                        styles.loginButton
+                    }
                         onPress={handleSignUp}>
                         <Text style={
                             styles.loginButtonText
@@ -152,36 +200,17 @@ const SignupScreen = ({navigation}) => {
                         }
                     }>Already have an account?
                     </Text>
-                        <TouchableOpacity onPress={handleSignUp}>
-                            <Text style={
-                                {
-                                    textAlign:"center",
-                                    color:"#1697C7",
-                                    fontSize: 15,
-                                }
-                            }>Login</Text>
-                        </TouchableOpacity>
-                    
-                    {/* <View style={
-                        styles.socialLoginContainer
-                    }>
-                        <TouchableOpacity style={
-                            styles.socialLoginButton
-                        }>
-                            <Image 
-                                source={
-                                    require("../assets/facebook.png")
-                                }/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={
-                            styles.socialLoginButton
-                        }>
-                            <Image 
-                            source={
-                                    require("../assets/google.png")
-                                }/>
-                        </TouchableOpacity>
-                    </View> */}
+                    <TouchableOpacity onPress={handleSignUp}>
+                        <Text style={
+                            {
+                                textAlign: "center",
+                                color: "#1697C7",
+                                fontSize: 15,
+                            }
+                        }>Sign In</Text>
+                    </TouchableOpacity>
+
+                 
                 </View>
             </ImageBackground>
         </View>
@@ -225,15 +254,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 50,
-        height: "65%"
+        height: "70%"
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#C0C0C0',
+        backgroundColor: '#bfc1c2',
         borderRadius: 15,
         marginBottom: 5,
-        marginTop:15,
+        marginTop: 15,
         paddingVertical: 10,
         paddingHorizontal: 10
     },

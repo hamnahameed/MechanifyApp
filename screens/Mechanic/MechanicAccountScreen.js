@@ -1,14 +1,18 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import {
     View,
     Text,
     TouchableOpacity,
     TextInput,
     StyleSheet,
-    Image
+    Image,
+    Radio,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
+// import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import {useNavigation} from '@react-navigation/native'
+import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 const MechanicAccountScreen = () => {
     const navigation = useNavigation();
@@ -16,15 +20,12 @@ const MechanicAccountScreen = () => {
     const openDrawer = () => {
         navigation.openDrawer();
     };
+    const [gender, setGender] = useState('male'); // Initial gender value
 
-    return (
-        <View style={
-            styles.container
-        }>
+return (
+        <View style={styles.container}>
           
-            <View style={
-                styles.background
-            }></View>
+            <View style={styles.background}></View>
 
 
             
@@ -32,16 +33,15 @@ const MechanicAccountScreen = () => {
                 {
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingHorizontal: 10,
+                    paddingHorizontal: 40,
                     top: 30
                 }
             }>
-                <TouchableOpacity onPress={openDrawer}>
-                    <Icon name="bars"
+              <TouchableOpacity onPress={openDrawer}>
+      <Icon name="bars"
                         size={30}
-                        color="#1697C7"
-                        top={5}/>
-                </TouchableOpacity>
+                        color="#1697C7" top={5} />
+      </TouchableOpacity>
 
 
                 {/* logo */}
@@ -55,20 +55,15 @@ const MechanicAccountScreen = () => {
 
                         }
                     }
-                    source={
-                        require('../../assets/logo2.png')
-                    }/>
+                    source={require('../../assets/logo2.png')}/>
             </View>
 
 
             {/* User Icon */}
-            <View style={
-                styles.userIconContainer
-            }>
+            <View style={styles.userIconContainer}>
                 <Icon name="user"
                     size={70}
                     color="black"/>
-
 
             </View>
 
@@ -92,15 +87,9 @@ const MechanicAccountScreen = () => {
             </View>
 
            
-            <View style={
-                styles.headingContainer
-            }>
-                <Text style={
-                    styles.heading
-                }>My Account</Text>
-                <TouchableOpacity style={
-                    styles.editButton
-                }>
+            <View style={styles.headingContainer}>
+                <Text style={styles.heading}>My Account</Text>
+                <TouchableOpacity style={styles.editButton}>
                     <Icon name="pencil"
                         size={20}
                         color="#1697C7"/>
@@ -108,36 +97,46 @@ const MechanicAccountScreen = () => {
 
 
             </View>
-            <View> 
-            
-           
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="First Name"/>
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="Last Name"/>
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="Email"/>
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="Password"
-                    secureTextEntry={true}/>
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="Address"/>
-                <TextInput style={
-                        styles.input
-                    }
-                    placeholder="city"/>
+
+        <View style={styles.profileInfo}>
+            <View style={styles.field}>
+                <Icon name="account" size={24} color="#000" style={styles.icon} />
+                <Text>Username</Text>
             </View>
+            <View style={styles.field}>
+                <Icon name="email" size={24} color="#000" style={styles.icon} />
+                <Text>Email</Text>
+            </View>
+            <View style={styles.field}>
+                <Icon name="lock" size={24} color="#000" style={styles.icon} />
+                <Text>Password</Text>
+            </View>
+            <View style={styles.field}>
+                <Icon name="phone" size={24} color="#000" style={styles.icon} />
+                <Text>Phone Number</Text>
+            </View>
+        <View style={styles.field}>
+          <Icon name="gender-male-female" size={24} color="#000" style={styles.icon} />
+          <Text>Gender</Text>
+          <View style={styles.radioButtons}>
+            <View style={styles.radioButton}>
+              <Text>Male</Text>
+              <Radio selected={gender === 'male'} onPress={() => setGender('male')} />
+            </View>
+            <View style={styles.radioButton}>
+              <Text>Female</Text>
+              <Radio selected={gender === 'female'} onPress={() => setGender('female')} />
+            </View>
+          </View>
         </View>
+        <View style={styles.field}>
+          <Icon name="home" size={24} color="#000" style={styles.icon} />
+          <Text>Address</Text>
+        </View>
+      </View>
+        </View>
+
+        
     );
 
 };
@@ -185,6 +184,25 @@ const styles = StyleSheet.create({
     editButton: {
         marginLeft: 10
     },
+    profileInfo: {
+        marginTop: 20,
+      },
+      field: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+      icon: {
+        marginRight: 10,
+      },
+      radioButtons: {
+        flexDirection: 'row',
+      },
+      radioButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 20,
+      },
     input: {
         width: '90%',
         height: 40,

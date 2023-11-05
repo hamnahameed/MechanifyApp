@@ -1,309 +1,272 @@
-import React, {useState} from 'react';
-import {
-    View,
-    ImageBackground,
-    Image,
-    TextInput,
-    TouchableOpacity,
-    Text,
-    StyleSheet
-} from 'react-native';
-import CustomDrawerContent from '../../DrawerContent/CustomDrawerContent';
+    import React, {useState} from 'react';
+    import {
+        View,
+        ImageBackground,
+        Image,
+        TextInput,
+        TouchableOpacity,
+        Text,
+        StyleSheet
+    } from 'react-native';
 
 
-const LoginScreen = ({navigation}) => { // login functioanlity
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
-    
+    const LoginScreen = ({navigation}) => { // login functioanlity
+        const [username, setUsername] = useState('');
+        const [password, setPassword] = useState('');
 
-// Login functionality
-    const handleLogin = ({props}) => {
-        const dummyPassword = '123';
+        
 
-        // Check if username and password match dummy data
-        if (username === "admin" && password === dummyPassword) {
-           navigation.navigate('Admin')
+    // Login functionality
+        const handleLogin = ({props}) => {
+            const dummyPassword = '123';
 
-        } else if (username === "user" && password === dummyPassword) {
-            navigation.navigate('User');
+            // Check if username and password match dummy data
+            if (username === "admin" && password === dummyPassword) {
+            navigation.navigate('Admin')
 
-        } else if (username === "mechanic" && password === dummyPassword) {
-            navigation.navigate('Mechanic');
+            } else if (username === "user" && password === dummyPassword) {
+                navigation.navigate('User');
 
-        } else if (username === "shop" && password === dummyPassword) {
-            navigation.navigate('Shop');
+            } else if (username === "mechanic" && password === dummyPassword) {
+                navigation.navigate('Mechanic');
 
-        } else {
-            alert('Invalid username or password');
-        }
-    };
+            } else if (username === "shop" && password === dummyPassword) {
+                navigation.navigate('Shop');
 
-    // signup functionality
-    const handleSignUp = () => {
-        navigation.navigate('Signup'); // Navigate to SignUp screen
-    };
+            } else {
+                alert('Invalid username or password');
+            }
+        };
 
-    // background
-    return (
-        <View style={
-            styles.container
-        }>
-            <ImageBackground source={
-                    require('../../assets/bg.jpeg')
-                }
-                style={
-                    styles.backgroundImage
-            }>
+        // signup functionality
+        const handleSignUp = () => {
+            navigation.navigate('Signup'); // Navigate to SignUp screen
+        };
 
-            {/* logo */}
-                <View style={
-                    styles.logoContainer
-                }>
-                    <View style={
-                        styles.logo
-                    }>
-                        <Image source={
-                                require('../../assets/logo2.png')
-                            }
-                            style={
-                                styles.logoImage
-                            }/>
+        // background
+        return (
+            <View style={styles.container}>
+                <ImageBackground source={require('../../assets/bg.jpeg')}
+                    style={styles.backgroundImage}>
+
+                {/* logo */}
+                    <View style={styles.logoContainer}>
+                        <View style={styles.logo}>
+                            <Image source={require('../../assets/logo2.png')}style={styles.logoImage }/>
+                        </View>
                     </View>
-                </View>
+                
 
-{/* login form */}
-                <View style={
-                    styles.formContainer
-                }>
-                    <Text style={
-                        styles.welcome
-                    }>Welcome Back!</Text>
+    {/* login form */}
+                    <View style={styles.formContainer}>
+                        <Text style={styles.welcome}>Welcome Back!</Text>
 
-                    <Text style={
-                        styles.placeholder
-                    }>Username</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                                require('../../assets/userIcon.png')
-                            }
-                            style={
-                                styles.inputIcon
-                            }/>
-                        <TextInput style={
-                                styles.input
-                            }
-                            placeholder="username"
-                            placeholderTextColor="black"
-                            onChangeText={
-                                (text) => setUsername(text)
-                            }/>
-                    </View>
-                    <Text style={
-                        styles.placeholder
-                    }>Password</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                                require('../../assets/passIcon.png')
-                            }
-                            style={
-                                styles.inputIcon
-                            }/>
-                        <TextInput style={
-                                styles.input
-                            }
-                            placeholder="password"
-                            placeholderTextColor="black"
-                            secureTextEntry
-                            onChangeText={
-                                (text) => setPassword(text)
-                            }/>
-                    </View>
-                    <TouchableOpacity onPress={
-                            () => alert('Forgot Password?')
-                        }
-                        style={
-                            styles.forgotPassword
-                    }>
-                        <Text style={
-                            styles.forgotPasswordText
-                        }>Forgot Password?</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={
-                            styles.loginButton
-                        }
-                        onPress={handleLogin}>
-                        <Text style={
-                            styles.loginButtonText
-                        }>Login</Text>
-                    </TouchableOpacity>
-
-                    <Text style={
-                        {
-                            textAlign: "center",
-                            top: 5,
-                            fontWeight: "bold"
-                        }
-                    }>Or login with</Text>
-                    <View style={
-                        styles.socialLoginContainer
-                    }>
-                        <TouchableOpacity style={
-                            styles.socialLoginButton
-                        }>
-                            <Image style={
-                                    styles.socialLoginButtonText
-                                }
-                                source={
-                                    require("../../assets/facebook.png")
+                        <Text style={styles.placeholder }>Username</Text>
+                        <View style={styles.inputContainer }>
+                            <Image source={require('../../assets/userIcon.png')}
+                                style={styles.inputIcon}/>
+                            <TextInput style={styles.input}
+                                placeholder="username"
+                                placeholderTextColor="black"
+                                onChangeText={
+                                    (text) => setUsername(text)
                                 }/>
+                        </View>
+                        <Text style={styles.placeholder}>Password</Text>
+                        <View style={styles.inputContainer}>
+                            <Image source={require('../../assets/passIcon.png')}
+                                style={styles.inputIcon}/>
+                            <TextInput style={styles.input}
+                                placeholder="password"
+                                placeholderTextColor="black"
+                                secureTextEntry
+                                onChangeText={
+                                    (text) => setPassword(text)
+                                }/>
+                        </View>
+                        <TouchableOpacity onPress={
+                                () => alert('Forgot Password?')
+                            }
+                            style={
+                                styles.forgotPassword
+                        }>
+                            <Text style={
+                                styles.forgotPasswordText
+                            }>Forgot Password?</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={
-                            styles.socialLoginButton
-                        }>
-                            <Image style={
-                                    styles.socialLoginButtonText
-                                }
-                                source={
-                                    require("../../assets/google.png")
-                                }/>
+                                styles.loginButton
+                            }
+                            onPress={handleLogin}>
+                            <Text style={
+                                styles.loginButtonText
+                            }>Login</Text>
                         </TouchableOpacity>
-                    </View>
-                    <Text style={
-                        {
-                            textAlign: "center",
-                            fontSize: 15,
-                            fontWeight: "bold"
-                        }
-                    }>Don't have an account?
-                    </Text>
 
-                    <TouchableOpacity onPress={handleSignUp}>
                         <Text style={
                             {
                                 textAlign: "center",
-                                color: "#1697C7",
-                                fontSize: 15
+                                top: 5,
+                                fontWeight: "bold"
                             }
-                        }>Signup</Text>
-                    </TouchableOpacity>
+                        }>Or login with</Text>
+                        <View style={
+                            styles.socialLoginContainer
+                        }>
+                            <TouchableOpacity style={
+                                styles.socialLoginButton
+                            }>
+                                <Image style={
+                                        styles.socialLoginButtonText
+                                    }
+                                    source={
+                                        require("../../assets/facebook.png")
+                                    }/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={
+                                styles.socialLoginButton
+                            }>
+                                <Image style={
+                                        styles.socialLoginButtonText
+                                    }
+                                    source={
+                                        require("../../assets/google.png")
+                                    }/>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={
+                            {
+                                textAlign: "center",
+                                fontSize: 15,
+                                fontWeight: "bold"
+                            }
+                        }>Don't have an account?
+                        </Text>
 
-                </View>
+                        <TouchableOpacity onPress={handleSignUp}>
+                            <Text style={
+                                {
+                                    textAlign: "center",
+                                    color: "#1697C7",
+                                    fontSize: 15
+                                }
+                            }>Signup</Text>
+                        </TouchableOpacity>
 
-            </ImageBackground>
-        </View>
-    );
-};
+                    </View>
 
-
-// styling
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    backgroundImage: {
-        flex: 1,
-        resizeMode: 'cover',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    logoContainer: {
-        alignItems: 'center',
-        marginBottom: 50
-    },
-    logo: {
-        width: 150,
-        height: 150,
-        borderWidth: 1,
-        borderColor: "#1697C7",
-        borderRadius: 70,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    logoImage: {
-        width: 350,
-        height: 300,
-        left: 18,
-        top: 20,
-        resizeMode: 'contain'
-    },
-    formContainer: {
-        width: '80%',
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 50,
-        height: "65%"
-    },
-    welcome: {
-        fontSize: 28,
-        fontWeight: "bold",
-        fontFamily: "serif",
-        paddingLeft: 15
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#C0C0C0',
-        borderRadius: 15,
-        marginBottom: 5,
-        marginTop: 30,
-        paddingVertical: 10,
-        paddingHorizontal: 10
-    },
+                </ImageBackground>
+            </View>
+        );
+    };
 
 
-    inputIcon: {
-        width: 20,
-        height: 20,
-        marginRight: 10
-    },
-    input: {
-        flex: 1,
-        color: "black"
-    },
-    placeholder: {
-        fontSize: 15,
-        fontWeight: "bold",
-        paddingLeft: 5,
-        top: 30
+    // styling
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1
+        },
+        backgroundImage: {
+            flex: 1,
+            resizeMode: 'cover',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        logoContainer: {
+            alignItems: 'center',
+            marginBottom: 50
+        },
+        logo: {
+            width: 150,
+            height: 150,
+            borderWidth: 1,
+            borderColor: "#1697C7",
+            borderRadius: 70,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        logoImage: {
+            width: 350,
+            height: 300,
+            left: 18,
+            top: 20,
+            resizeMode: 'contain'
+        },
+        formContainer: {
+            width: '80%',
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 50,
+            height: "65%"
+        },
+        welcome: {
+            fontSize: 28,
+            fontWeight: "bold",
+            fontFamily: "serif",
+            paddingLeft: 15,
+            textAlign:'center',
+        },
+        inputContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: '#bfc1c2',
+            borderRadius: 15,
+            marginBottom: 5,
+            marginTop: 30,
+            paddingVertical: 10,
+            paddingHorizontal: 10
+        },
 
-    },
-    forgotPassword: {
-        alignSelf: 'flex-end'
-    },
-    forgotPasswordText: {
-        color: 'black'
-    },
-    loginButton: {
-        backgroundColor: '#1697C7',
-        paddingVertical: 5,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginTop: 20
-    },
-    loginButtonText: {
-        color: 'white',
-        fontSize: 25,
-        fontWeight: 'bold'
-    },
-    socialLoginContainer: {
-        marginTop: 0,
-        flexDirection: 'row',
-        marginLeft: 85
-    },
-    socialLoginButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        borderRadius: 5
-    },
-    socialLoginButtonText: {
-        color: '#fff'
-    }
-});
 
-export default LoginScreen;
+        inputIcon: {
+            width: 20,
+            height: 20,
+            marginRight: 10
+        },
+        input: {
+            flex: 1,
+            color: "black"
+        },
+        placeholder: {
+            fontSize: 15,
+            fontWeight: "bold",
+            paddingLeft: 5,
+            top: 30
+
+        },
+        forgotPassword: {
+            alignSelf: 'flex-end'
+        },
+        forgotPasswordText: {
+            color: 'black'
+        },
+        loginButton: {
+            backgroundColor: '#1697C7',
+            paddingVertical: 5,
+            borderRadius: 10,
+            alignItems: 'center',
+            marginTop: 20
+        },
+        loginButtonText: {
+            color: 'white',
+            fontSize: 25,
+            fontWeight: 'bold'
+        },
+        socialLoginContainer: {
+            marginTop: 0,
+            flexDirection: 'row',
+            marginLeft: 85
+        },
+        socialLoginButton: {
+            paddingVertical: 10,
+            paddingHorizontal: 10,
+            borderRadius: 5
+        },
+        socialLoginButtonText: {
+            color: '#fff'
+        }
+    });
+
+    export default LoginScreen;

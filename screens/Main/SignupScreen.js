@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 50,
-        height: "70%"
+        height: 'auto'
     },
     inputContainer: {
         flexDirection: 'row',

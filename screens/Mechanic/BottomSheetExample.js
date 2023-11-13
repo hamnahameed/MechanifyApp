@@ -24,10 +24,7 @@ const BottomSheetExample = () => {
           <BottomSheetScrollView>
             {/* Content for the bottom sheet */}
             <View style={{ padding: 16 }}>
-              <Text style={styles.button}   onPress={() => {
-  navigation.navigate('ServiceRequestsScreen'); 
-  navigation.navigate('TabNavigator'); 
-}} >View All Requests</Text>
+              <Text style={styles.button}   onPress={() => {navigation.navigate('ServiceRequestsScreen');}}>View All Requests</Text>
             </View>
           </BottomSheetScrollView>
         </BottomSheetModal>

@@ -41,22 +41,22 @@ const LoadingScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor:'#fff',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-   
-  },
-  content: {
-    alignItems: 'center',
-  },
-  logo:{
-    width:700,
-    height:250,
-    left:40
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor:'#fff',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    
+    },
+    content: {
+      alignItems: 'center',
+    },
+    logo:{
+      width:700,
+      height:250,
+      left:40
+    },
+  });
 
 export default LoadingScreen;

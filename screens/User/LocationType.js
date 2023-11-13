@@ -9,8 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // You may need to ins
 const LocationType = ({ navigation }) => {
 
     const handleSelectOnMap = () => {
-      navigation.navigate('MapViewScreenCopy');
-      };
+      navigation.navigate('MapViewScreen');};
 
       const [location, setLocation]=useState('')
      
@@ -41,13 +40,10 @@ const LocationType = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
         marginTop: 30,
         padding: 30,
       },
       input: {
-
         flex:1
       },
       addLocation:{
@@ -58,9 +54,7 @@ const styles = StyleSheet.create({
         width: 350,
         height: 40,
         marginBottom: 10,
-        
         padding: 5,
-        
       },
       mapSelection: {
         flexDirection: 'row',
@@ -74,5 +68,5 @@ const styles = StyleSheet.create({
       },
 });
 
-//make this component available to the app
+
 export default LocationType;

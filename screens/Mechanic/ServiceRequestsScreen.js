@@ -49,51 +49,25 @@ const ServiceRequestsScreen = () => {
 
   return (
     <View style={styles.container}>
-          
-          
-
-
-            
-            <View style={
-                {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 40,
-                    top: 30
-                }
-            }>
+ 
+            <View style={{flexDirection: 'row',alignItems: 'center',paddingHorizontal: 40,top: 30}}>
               <TouchableOpacity onPress={openDrawer}>
-      <Icon name="bars"
-                        size={30}
-                        color="#1697C7" top={5} left={-10} />
-      </TouchableOpacity>
+                  <Icon name="bars" size={30} color="#1697C7" top={5} left={-10} />
+              </TouchableOpacity>
 
-        {/* logo */}
-        <Image style={
-                        {
-                            width: 200,
-                            height: 150,
-                            position: 'absolute',
-                            left: 230,
-                            top: -40
+      {/* logo */}
+        <Image style={{width: 200,height: 150,position: 'absolute',left: 230,top: -40}}
+                source={require('../../assets/logo2.png')}/>
 
-                        }
-                    }
-                    source={
-                        require('../../assets/logo2.png')
-                    }/>
-
-</View>
-  <View style={
-                styles.background
-            }>
-            </View>
-      <Text style={styles.heading}>Service Requests</Text>
+    </View>
+  <View style={styles.background}></View>
+        
+        <Text style={styles.heading}>Service Requests</Text>
       
       <FlatList
-        data={requests}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+          data={requests}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
           <ScrollView>
           <View style={styles.requestContainer}>
             <Text style={styles.serviceType}> {item.serviceType}</Text>
@@ -131,68 +105,68 @@ const ServiceRequestsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: '#fff',
+    },
+    background: {
+      position: 'absolute',
+      top: 100,
+      left: 0,
+      width: '120%',
+      height: '15%',
+      backgroundColor: '#1697C7', // Set your preferred color
   },
-  background: {
-    position: 'absolute',
-    top: 100,
-    left: 0,
-    width: '120%',
-    height: '15%',
-    backgroundColor: '#1697C7', // Set your preferred color
-},
-logoContainer: {
-  alignItems: 'right',
-  marginVertical: 20
-},
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    marginTop: 70,
-    letterSpacing:2,
-    marginLeft:20
+  logoContainer: {
+    alignItems: 'right',
+    marginVertical: 20
   },
-  requestContainer: {
-    backgroundColor: '#f5f5f5',
-    padding: 16,
-    marginBottom: 16,
-    borderRadius: 8,
-    marginTop: 60,
-  },
-  serviceType: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  location: {
-    fontSize: 16,
-    marginBottom: 12,
-  },
-  status: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'green',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 8,
-    
-  },
-  button: {
-    flex: 1,
-    padding: 8,
-    borderRadius: 4,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    
-  },
-});
+    heading: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      marginBottom: 16,
+      marginTop: 70,
+      letterSpacing:2,
+      marginLeft:20
+    },
+    requestContainer: {
+      backgroundColor: '#f5f5f5',
+      padding: 16,
+      marginBottom: 16,
+      borderRadius: 8,
+      marginTop: 60,
+    },
+    serviceType: {
+      fontSize: 18,
+      marginBottom: 8,
+    },
+    location: {
+      fontSize: 16,
+      marginBottom: 12,
+    },
+    status: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: 'green',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      marginTop: 8,
+      
+    },
+    button: {
+      flex: 1,
+      padding: 8,
+      borderRadius: 4,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      
+    },
+  });
 
 export default ServiceRequestsScreen;

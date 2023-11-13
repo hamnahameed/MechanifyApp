@@ -70,7 +70,7 @@
                     {
                         flexDirection: 'row',
                         alignItems: 'center',
-                        paddingHorizontal: 40,
+                        paddingHorizontal: 20,
                         top: 30
                     }
                 }>
@@ -85,7 +85,7 @@
                                 height: 150,
                                 position: 'absolute',
                                 left: 230,
-                                top: -40
+                                top: -35
 
                             }
                         }

@@ -6,12 +6,14 @@ import {
     TextInput,
     StyleSheet,
     Image,
-    Radio,
+  
 } from 'react-native';
 // import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import {useNavigation} from '@react-navigation/native'
-import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/FontAwesome';
+import { CheckBox } from 'react-native-elements';
+
 
 
 const MechanicAccountScreen = () => {
@@ -38,7 +40,7 @@ return (
                 }
             }>
               <TouchableOpacity onPress={openDrawer}>
-      <Icon name="bars"
+      <Icons name="bars"
                         size={30}
                         color="#1697C7" top={5} />
       </TouchableOpacity>
@@ -61,10 +63,7 @@ return (
 
             {/* User Icon */}
             <View style={styles.userIconContainer}>
-                <Icon name="user"
-                    size={70}
-                    color="black"/>
-
+                <Icons name="user" size={70} color="black"/>
             </View>
 
             <View>
@@ -98,43 +97,58 @@ return (
 
             </View>
 
+{/* profile form */}
         <View style={styles.profileInfo}>
             <View style={styles.field}>
                 <Icon name="account" size={24} color="#000" style={styles.icon} />
-                <Text>Username</Text>
+                <View style={{display:'flex',flexDirection:'column',marginLeft:20}}>
+                    <Text style={{color:'#1697c7'}}>Username</Text>
+                    <Text style={{fontSize:18}}>John doe</Text>
+                </View>
             </View>
             <View style={styles.field}>
                 <Icon name="email" size={24} color="#000" style={styles.icon} />
-                <Text>Email</Text>
+                <View style={{display:'flex',flexDirection:'column',marginLeft:20}}>
+                    <Text style={{color:'#1697c7'}}>Email</Text>
+                    <Text style={{fontSize:18}}>johndoe@gmail.com</Text>
+                </View>
             </View>
-            <View style={styles.field}>
+            {/* <View style={styles.field}>
                 <Icon name="lock" size={24} color="#000" style={styles.icon} />
                 <Text>Password</Text>
-            </View>
+            </View> */}
             <View style={styles.field}>
                 <Icon name="phone" size={24} color="#000" style={styles.icon} />
-                <Text>Phone Number</Text>
+                <View style={{display:'flex',flexDirection:'column',marginLeft:20}}>
+                    <Text style={{color:'#1697c7'}}>Phone Number</Text>
+                    <Text style={{fontSize:18}}>031765390</Text>
+                </View>
             </View>
-        <View style={styles.field}>
-          <Icon name="gender-male-female" size={24} color="#000" style={styles.icon} />
-          <Text>Gender</Text>
-          <View style={styles.radioButtons}>
-            <View style={styles.radioButton}>
-              <Text>Male</Text>
-              <Radio selected={gender === 'male'} onPress={() => setGender('male')} />
+            <View style={styles.field}>
+                <Icon name="gender-male-female" size={24} color="#000" style={styles.icon} />
+                <View style={{marginLeft:20}}>
+                <Text style={{color:"#1697c7"}}>Gender</Text>
+                <View style={styles.radioButtons}>
+                    <View style={styles.radioButton}>
+                        <Text style={{fontSize:18}}>Male</Text>
+                        <CheckBox checked={gender === 'male'} onPress={() => setGender('male')} />
+                    </View>
+                    <View style={styles.radioButton}>
+                        <Text style={{fontSize:18}}>Female</Text>
+                        <CheckBox checked={gender === 'female'} onPress={() => setGender('female')} />
+                    </View>
+                </View>
+                </View>
             </View>
-            <View style={styles.radioButton}>
-              <Text>Female</Text>
-              <Radio selected={gender === 'female'} onPress={() => setGender('female')} />
+            <View style={styles.field}>
+                <Icon name="home" size={24} color="#000" style={styles.icon} />
+                <View style={{display:'flex',flexDirection:'column',marginLeft:20}}>
+                    <Text style={{color:'#1697c7'}}>Address</Text>
+                    <Text style={{fontSize:18}}>House no 23,Street no 5,NewYork</Text>
+                </View>
             </View>
-          </View>
         </View>
-        <View style={styles.field}>
-          <Icon name="home" size={24} color="#000" style={styles.icon} />
-          <Text>Address</Text>
-        </View>
-      </View>
-        </View>
+    </View>
 
         
     );
@@ -144,6 +158,7 @@ return (
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop:10
     },
     background: {
         position: 'absolute',
@@ -186,14 +201,19 @@ const styles = StyleSheet.create({
     },
     profileInfo: {
         marginTop: 20,
+        marginLeft:20
       },
       field: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
+        marginVertical:20
       },
       icon: {
         marginRight: 10,
+        borderRadius: 50,
+        backgroundColor:'#C0C0C0',
+        padding:10
       },
       radioButtons: {
         flexDirection: 'row',
@@ -201,7 +221,9 @@ const styles = StyleSheet.create({
       radioButton: {
         flexDirection: 'row',
         alignItems: 'center',
+       
         marginRight: 20,
+        marginTop:-15
       },
     input: {
         width: '90%',

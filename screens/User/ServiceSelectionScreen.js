@@ -43,7 +43,7 @@ const ServiceSelectionScreen = ({ navigation }) => {
       <Icon name="arrow-left" size={20} color="black" />
     </TouchableOpacity>
     
-      <Text style={styles.heading}>Select Type of Service</Text>
+      <Text style={styles.heading}>All Services</Text>
     </View>
      
 

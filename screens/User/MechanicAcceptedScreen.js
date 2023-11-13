@@ -38,8 +38,8 @@
       // back functionality
       const navigation = useNavigation();
       const handleBack = () => {
-          navigation.navigate('ServiceRequestsScreen');
-          navigation.navigate('TabNavigator')
+          navigation.navigate('FindMechanicScreen');
+   
     };
 
   //   open drawer
@@ -71,25 +71,29 @@
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         });
-
-  
       };
   
     
       getLocation();
     }, []);
   
+  
     return (
       <View style={styles.container}>
         {/* Header with back button and logo */}
         <View style={styles.header}>
-      
+        <TouchableOpacity onPress={handleBack} style={{ marginLeft: 15 }}>
+        <Icon name="arrow-left" size={20} color="#1697C7" />
+      </TouchableOpacity>
+
+      <Image style={styles.logo} source={require('../../assets/logo2.png')} />
 
         <TouchableOpacity onPress={openDrawer}>
-          <Icon name="bars" size={30} color="black" style={{top:70,position:'absolute',left:20 }}  />
-        </TouchableOpacity>
-  
-          </View>
+          <Icon name="bars" size={30} color="#1697C7" style={{paddingRight:10}} />
+          </TouchableOpacity>
+          
+        </View>
+        <View style={styles.horizontalLine} ></View>
         
 
         {/* Map section */}
@@ -149,12 +153,14 @@
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 16, 
+      padding: 16,
+      marginBottom:-50  
     },
     logo: {
       width: 200,
       height: 150,
-      resizeMode: 'contain',
+      marginLeft:30,
+      marginTop:10,
     },
     horizontalLine: {
       borderBottomColor: '#1697c7', 

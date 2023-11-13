@@ -1,11 +1,10 @@
 //import liraries
 import React,  { useState,useRef,useEffect} from 'react';
-import { View, Text, ScrollView, Image, StyleSheet ,TouchableOpacity,TextInput,PermissionsAndroid} from 'react-native';
+import { View, Text,Image, StyleSheet ,TouchableOpacity,TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import {useNavigation,useRoute } from '@react-navigation/native'
 import MapView,{Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
-import FindMechanicScreen from './FindMechanicScreen';
 
 
 

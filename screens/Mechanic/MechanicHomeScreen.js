@@ -42,7 +42,7 @@ const MechanicHomeScreen = ({ navigation }) => {
                             height: 150,
                             position:'absolute',
                             left:250,
-                            top:-40
+                            top:-35
                            
                         }
                     }

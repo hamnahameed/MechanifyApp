@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView,Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import LogoutModal from '../screens/Main/LogoutModal';
+
 
 
 const UserDrawerContent = ({ navigation ,username}) => {
@@ -38,104 +41,55 @@ const UserDrawerContent = ({ navigation ,username}) => {
 
       {/* Drawer Items */}
       <ScrollView>
-      <View>
+      <View style={{marginTop:50,marginLeft:10}}>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('UserAccountScreen')}>
         <Icon name="user" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Account</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('MechanicMngt')}>
         <Icon name="wrench" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Appointment Management</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
-        <Icon name="map-marker" size={20} color={'#1697C7'}/>
+        <Icon name="map-marker" size={23} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Location Management</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
-        <Icon name="clipboard" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Service History</Text>
+        <FeatherIcon name="clock" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Request History</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => navigation.navigate('')}>
         <Icon name="star" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Reviews & Ratings</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('')}>
-        <Icon name="comment" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Chat</Text>
+        onPress={() => navigation.navigate('SettingScreen')}>
+        <Icon name="cog" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Settings</Text>
       </TouchableOpacity>
       <View
   style={{
     borderBottomColor: 'black',
     borderBottomWidth: 1,
-    marginVertical: 30,
+    marginTop: 50,
     marginLeft:20,
-    width:200
+    width:200,
   }}
 />
-{/* Logout button */}
-<TouchableOpacity 
-        style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => {
-    setModalVisible(true);
-    navigation.closeDrawer(); 
-  }}>
-        <Icon name="sign-out" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Log out</Text>
-      </TouchableOpacity>
-
-      {/* Logout Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-
-<View style={styles.centeredView}>
-        <View style={styles.modalView}>
-        {/* Logout Icon */}
-        <Icon name="sign-out" size={60} color="#1697c7" />
-          {/* Content */}
-          <Text style={styles.modalText}>Are you sure you want to logout?</Text>
-          
-
-          {/* Yes and No Buttons */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleLogout}
-            >
-              <Text style={styles.buttonText}  onPress={() => {
-    navigation.navigate("Login");
-    setModalVisible(false);
-    ; 
-  }}>Yes</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.button2}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.buttonText2}>No</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        </View>
-      </Modal>
-    </View>
+<LogoutModal/>
+</View>
     </ScrollView>
     </View>
   );
@@ -178,56 +132,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 18,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '80%',
-  },
-  button: {
-    backgroundColor: '#1697c7',
-    padding: 10,
-    borderRadius: 5,
-    width: 100,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  button2: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth:1,
-    borderColor:'#1697c7',
-    width: 100,
-    alignItems: 'center',
-  },
-  buttonText2: {
-    color: '#1697c7',
-    fontSize: 16,
-  },
+ 
 });
 export default UserDrawerContent;

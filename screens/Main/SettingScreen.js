@@ -35,14 +35,12 @@ const SettingScreen = ({navigation}) => {
 
 
     return (
-        <View style={
-            styles.container
-        }>
+        <View style={styles.container}>
             <View style={
                 {
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingHorizontal: 40,
+                    paddingHorizontal: 20,
                     top: 30
                 }
             }>
@@ -133,43 +131,43 @@ thumbColor={notificationsEnabled ? '#fff' : '#fff'}
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 16
+        },
+        heading: {
+            fontSize: 30,
+            fontWeight: 'bold',
+            marginBottom: 16,
+            marginTop:100,
+            letterSpacing:2,
+            marginLeft:20
+        },
+        background: {
+        position: 'absolute',
+        top: 100,
+        left: 0,
+        width: '120%',
+        height: '15%',
+        backgroundColor: '#1697C7', // Set your preferred color
     },
-    heading: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginBottom: 16,
-        marginTop:100,
-        letterSpacing:2,
-        marginLeft:20
-    },
-    background: {
-      position: 'absolute',
-      top: 100,
-      left: 0,
-      width: '120%',
-      height: '15%',
-      backgroundColor: '#1697C7', // Set your preferred color
-  },
-    setting: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
-        marginTop: 80
-    },
-    settingRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20
-    },
-    settingLabel: {
-        fontSize: 20
-    }
-});
+        setting: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 16,
+            marginTop: 80
+        },
+        settingRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20
+        },
+        settingLabel: {
+            fontSize: 20
+        }
+    });
 
 export default SettingScreen;

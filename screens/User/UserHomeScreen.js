@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
       marginRight:10,
      
     },
-   
     navigator:{
       backgroundColor:'#1697c7',
       borderRadius:50,
@@ -222,7 +221,6 @@ const styles = StyleSheet.create({
       fontSize: 16,
       color:'black'
     },
-  
     button: {
       backgroundColor: '#1697c7',
       paddingVertical: 15,

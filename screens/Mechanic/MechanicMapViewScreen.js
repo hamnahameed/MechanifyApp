@@ -7,18 +7,17 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as Location from 'expo-location';
-// import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
 
 
 // create a component
-const MapViewScreen = () => {
+const MechanicMapViewScreen = () => {
 
   
      // back functionality
       const navigation = useNavigation();
-      const handleBack = () => {navigation.navigate('UserHomeScreen')};
+      const handleBack = () => {navigation.navigate('MechanicHomeScreen')};
 
   // current Location
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -54,7 +53,7 @@ const MapViewScreen = () => {
  
 
   function LocationSelected() {
-    navigation.navigate('UserHomeScreen', { selectedMapLocation: currentLocation });
+    navigation.navigate('MechanicHomeScreen', { selectedMapLocation: currentLocation });
   }
     return (
         <View style={styles.container}>
@@ -64,7 +63,6 @@ const MapViewScreen = () => {
             <Icon name="arrow-left" size={20} color="#1697c7" />
           </TouchableOpacity>
 {/* Map section */}
-            
             
                {initialRegion && (
         <MapView style={styles.map} initialRegion={initialRegion} >
@@ -78,11 +76,10 @@ const MapViewScreen = () => {
               title="Your Location"
             />
           )}
-          
+     
         </MapView>
         
       )}
-    
     
               <Text style={styles.button} onPress={LocationSelected}>Done</Text>
 
@@ -117,4 +114,4 @@ const MapViewScreen = () => {
   });
 
 
-export default MapViewScreen;
+export default MechanicMapViewScreen;

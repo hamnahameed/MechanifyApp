@@ -49,6 +49,7 @@ const MechanicDrawerContent = ({ navigation }) => {
         <Icon name="user" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 20 }}>My profile</Text>
       </TouchableOpacity>
+     
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
         onPress={() => {navigation.navigate('ServiceRequestsScreen');}}>

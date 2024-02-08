@@ -18,7 +18,7 @@ const SignupScreen = ({ navigation }) => {
         navigation.navigate('Login'); // Navigate to SignUp screen
     };
 
-    const [selectedRole, setSelectedRole] = useState('user'); // Default role is 'user'
+const [selectedRole, setSelectedRole] = useState('user'); // Default role is 'user'
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);

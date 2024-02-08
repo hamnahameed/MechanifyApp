@@ -42,6 +42,8 @@ const ServiceSelectionScreen = ({ navigation }) => {
       <TouchableOpacity onPress={handleBack} style={{ marginLeft: 15,marginTop:15 }}>
       <Icon name="arrow-left" size={20} color="black" />
     </TouchableOpacity>
+
+    
     
       <Text style={styles.heading}>All Services</Text>
     </View>

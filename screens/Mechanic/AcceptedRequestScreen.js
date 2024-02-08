@@ -13,7 +13,7 @@
 
     // Dummy contact information
       const contactInfo = {
-        name: 'John Doe',
+        name: 'customer name',
         phone: '123-456-7890',
       };
     
@@ -114,7 +114,7 @@
  
           <View style={styles.nameContainer}>
               <Image  source={require('../../assets/john.jpg')} style={styles.contactImage}/>
-              <Text style={{fontSize:25,marginLeft:20}}>{contactInfo.name}</Text>
+              <Text style={{fontSize:20,marginLeft:20,color:'#C0C0C0',fontWeight:'bold',width:100}}>{contactInfo.name}</Text>
             
             <View style={styles.phoneContainer}>
               <TouchableOpacity onPress={makePhoneCall} style={styles.phoneButton}>

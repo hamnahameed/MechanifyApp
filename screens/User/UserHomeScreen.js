@@ -5,12 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the 
 import {useNavigation,useRoute } from '@react-navigation/native'
 import MapView,{Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { Dropdown } from 'react-native-element-dropdown';
-import { color } from 'react-native-elements/dist/helpers';
-
-
-
 
 
 

@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       marginTop:-130
     },
-  
     serviceBox: {
       width: '30%',
       height: 120,

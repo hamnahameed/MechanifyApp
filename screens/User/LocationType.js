@@ -90,7 +90,7 @@ return (
         <View style={{ flexDirection: 'row', margin: moderateScale(10), flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.icon}>
-              <AntDesign name="arrowleft" color={'red'} size={25} />
+              <AntDesign name="arrowleft" color={'#1697c7'} size={25} />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 4, justifyContent: 'center' }}>
@@ -111,12 +111,16 @@ return (
               console.log(details?.geometry?.location);
               myContext.setLatitude(details?.geometry?.location?.lat);
               myContext.setLongitude(details?.geometry?.location?.lng);
+             
               mapRef.current.animateToRegion({
+                
                 latitude: details?.geometry?.location?.lat,
                 longitude: details?.geometry?.location?.lng,
                 latitudeDelta: 0.08,
                 longitudeDelta: 0.08,
-              }, 1000);
+    
+              }, 1000)
+             
             }}
             onFail={(error) => console.error(error)} />
         </View>
@@ -126,7 +130,7 @@ return (
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1.5 }}>
-          <TouchableOpacity  style={styles.btn}>
+          <TouchableOpacity  style={styles.btn} onPress={()=>navigation.navigate('FindMechanicScreen')} >
             <Text style={styles.btnText}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -152,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   heading: {
-    color: 'red',
+    color: '#1',
     // fontFamily: Poppins_SemiBold,
     fontSize: 15,
   },

@@ -106,7 +106,7 @@ const MapViewScreen = () => {
           paddingVertical: 15,
           alignItems: 'center',
           marginLeft:65,
-          position:'absolute',
+          position:'relative',
           top:800,
           textAlign:'center',
           width:300,

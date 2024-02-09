@@ -92,10 +92,10 @@ const MechanicHomeScreen = ({ navigation }) => {
             <Text style={styles.tagline}>At your Service</Text>
             <Text style={styles.tagline}>24 / 7</Text>
           </View>
-          <TouchableOpacity style={styles.location} onPress={() => navigation.navigate('MechanicLocationScreen')}>
+          <View style={styles.location}>
             <Icon name='map-marker' size={20} color='#1697c7' />
             <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
-          </TouchableOpacity>
+          </View>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: moderateScale(40) }}>
             <Image source={require('../../assets/heroImg2.png')} style={{ width: 300, height: 300, resizeMode:'cover' }} />
           </View>

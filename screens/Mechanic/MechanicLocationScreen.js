@@ -13,7 +13,7 @@ import Geocoder from 'react-native-geocoding';
 
 const MechanicLocationScreen = ({ navigation }) => {
   const myContext = useContext(AppContext);
-  console.log(myContext);
+
 
   const mapRef = useRef(null);
 
@@ -31,8 +31,6 @@ const MechanicLocationScreen = ({ navigation }) => {
       }, 1000);
     }
   };
-  
-
   const getLocationBack = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -53,6 +51,20 @@ const MechanicLocationScreen = ({ navigation }) => {
     }
     
   };
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      const response = await Geocoder.from(latitude, longitude);
+      const newAddress = response.results[0].formatted_address;
+      myContext.setAddress(newAddress);
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+  const handleSave = () => {
+    getAddressFromCoordinates(myContext.latitude, myContext.longitude);
+    console.log(myContext.address);
+    navigation.navigate('MechanicHomeScreen')
+  };
 
 return (
     <View style={styles.container}>
@@ -66,6 +78,19 @@ return (
         longitudeDelta: 0.0421,
       }}
       onMapReady={getCurrentLocation} 
+      // showsUserLocation={true}
+        // showsMyLocationButton={true}
+        followsUserLocation={true}
+        showsCompass={true}
+        scrollEnabled={true}
+        zoomEnabled={true}
+        pitchEnabled={true}
+        rotateEnabled={true}
+        onRegionChange={(newRegion) => {
+          // Update the latitude and longitude based on the new region
+          myContext.setLatitude(newRegion.latitude);
+          myContext.setLongitude(newRegion.longitude);
+        }}
     >
     </MapView>
     <Marker
@@ -85,14 +110,14 @@ return (
         }}
       >
         <View>
-          <MaterialCommunityIcons name="map-marker-outline" color={'red'} size={40} />
+          <MaterialCommunityIcons name="map-marker-outline" color={'#1697C7'} size={40} />
         </View>
       </Marker>
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', margin: moderateScale(10), flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.icon}>
-              <AntDesign name="arrowleft" color={'red'} size={25} />
+              <AntDesign name="arrowleft" color={'#1697C7'} size={25} />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 4, justifyContent: 'center' }}>
@@ -124,11 +149,11 @@ return (
         </View>
         <View style={{ alignItems: 'flex-end', marginHorizontal: moderateScale(20), flex: 1 }}>
           <TouchableOpacity onPress={getLocationBack} style={styles.icon}>
-            <MaterialIcons name="my-location" color={'red'} size={25} />
+            <MaterialIcons name="my-location" color={'#1697C7'} size={25} />
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1.5 }}>
-          <TouchableOpacity  style={styles.btn}>
+          <TouchableOpacity onPress={()=>handleSave()}  style={styles.btn}>
             <Text style={styles.btnText}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   heading: {
-    color: 'red',
+    color: '#1697C7',
     // fontFamily: Poppins_SemiBold,
     fontSize: 15,
   },

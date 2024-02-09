@@ -20,25 +20,25 @@ const LoginScreen = ({ navigation }) => { // login functioanlity
 
     // Login functionality
     const handleLogin = ({ props }) => {
-        // const dummyPassword = '123';
-        navigation.navigate('Mechanic');
+        const dummyPassword = '123';
+      
 
         // Check if username and password match dummy data
-        // if (username === "admin" && password === dummyPassword) {
-        // navigation.navigate('Admin')
+        if (username === "admin" && password === dummyPassword) {
+        navigation.navigate('Admin')
 
-        // } else if (username === "user" && password === dummyPassword) {
-        //     navigation.navigate('User');
+        } else if (username === "User" && password === dummyPassword) {
+            navigation.navigate('User');
 
-        // } else if (username === "mechanic" && password === dummyPassword) {
-        //     navigation.navigate('Mechanic');
+        } else if (username === "Mechanic" && password === dummyPassword) {
+            navigation.navigate('Mechanic');
 
-        // } else if (username === "shop" && password === dummyPassword) {
-        //     navigation.navigate('Shop');
+        } else if (username === "Shop" && password === dummyPassword) {
+            navigation.navigate('Shop');
 
-        // } else {
-        //     alert('Invalid username or password');
-        // }
+        } else {
+            alert('Invalid username or password');
+        }
     };
 
     // signup functionality

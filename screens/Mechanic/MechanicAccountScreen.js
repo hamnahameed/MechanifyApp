@@ -25,35 +25,40 @@ const MechanicAccountScreen = () => {
     const navigation = useNavigation();
     const myContext = useContext(AppContext)
     const [gender, setGender] = useState('male'); // Initial gender value
+    const [name, setName] = useState("John Doe");
+    const [phone, setPhone] = useState("031765390");
+    const [pwd, setPwd] = useState("123");
+    const [address, setAddress] = useState(myContext.address)
+
 
     return (
-        <SafeAreaView style={{flex:1}}>
-          
-                <View style={styles.container}>
-                
-                   <TopBar navigation={navigation}/>
-                   <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={{ flex: 1 }}>
+
+            <View style={styles.container}>
+
+                <TopBar navigation={navigation} />
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.background}>
-                    {/* User Icon */}
-                    <View style={styles.userIconContainer}>
-                        <Icons name="user" size={70} color="black" />
-                    </View>
-                    <View>
-                        <Text style={{fontSize: 20,color: 'white',padding: 5,textAlign: 'center'}}>Mechanic</Text>
-                        <Text style={{fontSize: 15,color: 'white', padding: 5, textAlign: 'center'}}>mechanic123@gmail.com</Text>
-                    </View>
+                        {/* User Icon */}
+                        <View style={styles.userIconContainer}>
+                            <Icons name="user" size={70} color="black" />
+                        </View>
+                        <View>
+                            <Text style={{ fontSize: 20, color: 'white', padding: 5, textAlign: 'center' }}>Mechanic</Text>
+                            <Text style={{ fontSize: 15, color: 'white', padding: 5, textAlign: 'center' }}>mechanic123@gmail.com</Text>
+                        </View>
                     </View>
 
                     <View style={styles.headingContainer}>
-                        <View style={{flex:1}}>
-                        <Text style={styles.heading}>My Account</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.heading}>My Account</Text>
                         </View>
-                       
-                        <TouchableOpacity style={{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
+
+                        {/* <TouchableOpacity style={{flex:1,justifyContent:'center',alignItems:'flex-end'}}>
                             <Icon name="pencil"
                                 size={20}
                                 color="#1697C7" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
 
                     </View>
@@ -61,33 +66,51 @@ const MechanicAccountScreen = () => {
                     {/* profile form */}
                     <View style={styles.profileInfo}>
                         <View style={styles.field}>
-                            <Icon name="account" size={24} color="#000" style={styles.icon} />
-                            <View style={{ display: 'flex', flexDirection: 'column', marginLeft: 20 }}>
-                                <Text style={{ color: '#1697c7' }}>Username</Text>
-                                <Text style={{ fontSize: 18 }}>John doe</Text>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'account'} size={30} color="#000" style={styles.icon} />
+                            </View>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
+                                <Text style={{ color: '#1697c7' }}>{'Username'}</Text>
+                                <TextInput style={{ fontSize: 18 }} value={name} onChangeText={(e)=>setName(e)} />
                             </View>
                         </View>
                         <View style={styles.field}>
-                            <Icon name="email" size={24} color="#000" style={styles.icon} />
-                            <View style={{ display: 'flex', flexDirection: 'column', marginLeft: 20 }}>
-                                <Text style={{ color: '#1697c7' }}>Email</Text>
-                                <Text style={{ fontSize: 18 }}>johndoe@gmail.com</Text>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'email'} size={30} color="#000" style={styles.icon} />
                             </View>
-                        </View>
-                        {/* <View style={styles.field}>
-                <Icon name="lock" size={24} color="#000" style={styles.icon} />
-                <Text>Password</Text>
-            </View> */}
-                        <View style={styles.field}>
-                            <Icon name="phone" size={24} color="#000" style={styles.icon} />
-                            <View style={{ display: 'flex', flexDirection: 'column', marginLeft: 20 }}>
-                                <Text style={{ color: '#1697c7' }}>Phone Number</Text>
-                                <Text style={{ fontSize: 18 }}>031765390</Text>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
+                                <Text style={{ color: '#1697c7' }}>{'Email'}</Text>
+                                <TextInput editable={false} style={{ fontSize: 18 }} value='johndoe@gmail.com' />
                             </View>
                         </View>
                         <View style={styles.field}>
-                            <Icon name="gender-male-female" size={24} color="#000" style={styles.icon} />
-                            <View style={{ marginLeft: 20 }}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'phone'} size={30} color="#000" style={styles.icon} />
+                            </View>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
+                                <Text style={{ color: '#1697c7' }}>{'Phone Number'}</Text>
+                                <TextInput style={{ fontSize: 18 }} value={phone} onChangeText={(e)=>setPhone(e)} />
+                            </View>
+                        </View>
+                        <View style={styles.field}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'lock'} size={30} color="#000" style={styles.icon} />
+                            </View>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
+                                <Text style={{ color: '#1697c7' }}>{'Password'}</Text>
+                                <TextInput style={{ fontSize: 18 }} value={pwd} onChangeText={(e)=>setPwd(e)}secureTextEntry={true} />
+                            </View>
+                        </View>
+                        <View style={styles.field}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'gender-male-female'} size={30} color="#000" style={styles.icon} />
+                            </View>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
                                 <Text style={{ color: "#1697c7" }}>Gender</Text>
                                 <View style={styles.radioButtons}>
                                     <View style={styles.radioButton}>
@@ -102,16 +125,36 @@ const MechanicAccountScreen = () => {
                             </View>
                         </View>
                         <View style={styles.field}>
-                            <Icon name="home" size={24} color="#000" style={styles.icon} />
-                            <View style={{ display: 'flex', flexDirection: 'column', marginLeft: 20 }}>
-                                <Text style={{ color: '#1697c7' }}>Address</Text>
-                                <Text style={{ fontSize: 18 }}>{myContext.address}</Text>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icon name={'home'} size={30} color="#000" style={styles.icon} />
+                            </View>
+
+                            <View style={{ flex: 3, justifyContent: 'center' }}>
+                                <Text style={{ color: '#1697c7' }}>{'Address'}</Text>
+                                <TouchableOpacity onPress={() => navigation.navigate('MechanicLocationScreen')}>
+                                    <TextInput editable={false} multiline={true} style={{ fontSize: 18 }} value={address} onChangeText={(e)=>setAddress(e)} />
+                                </TouchableOpacity>
+
                             </View>
                         </View>
                     </View>
-                    </ScrollView>
-                </View>
-          
+                    <TouchableOpacity style={{
+                        backgroundColor: '#1697c7',
+                        padding: moderateScale(15),
+                        marginHorizontal: moderateScale(30),
+                        marginVertical: moderateScale(40),
+                        borderRadius: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+
+                    }}>
+                        <Text style={styles.button}>SAVE</Text>
+                    </TouchableOpacity>
+
+
+                </ScrollView>
+            </View>
+
         </SafeAreaView>
 
 
@@ -122,24 +165,28 @@ const MechanicAccountScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginVertical:moderateScale(30)
+        marginVertical: moderateScale(30)
     },
-    topBar:{
+    topBar: {
         flexDirection: 'row',
-        marginTop:moderateScale(30)
+        marginTop: moderateScale(30)
     },
     background: {
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor: '#1697C7', 
-        padding:moderateScale(10),
-      
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#1697C7',
+        padding: moderateScale(10),
+
+    },
+    button: {
+        fontSize: 18,
+        color: '#fff',
     },
     logo: {
         width: 50,
         height: 50,
         resizeMode: 'contain',
-      },
+    },
     userIconContainer: {
         width: 100,
         height: 100,
@@ -160,22 +207,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#1697C7'
     },
-   
+
     profileInfo: {
-        marginTop: 20,
-        marginLeft: 20
+        marginTop: moderateScale(20),
+
     },
     field: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        marginVertical: 20
+        marginVertical: moderateScale(8)
     },
     icon: {
+        width: 50,
+        height: 50,
         marginRight: 10,
-        borderRadius: 50,
+        borderRadius: 25,
         backgroundColor: '#C0C0C0',
-        padding: 10
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     radioButtons: {
         flexDirection: 'row',

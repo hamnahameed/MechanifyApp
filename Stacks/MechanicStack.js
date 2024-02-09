@@ -13,6 +13,7 @@ import BottomSheetExample from '../screens/Mechanic/BottomSheetExample';
 import SettingScreen from '../screens/Main/SettingScreen';
 import LogoutModal from '../screens/Main/LogoutModal';
 import MechanicMapViewScreen from '../screens/Mechanic/MechanicMapViewScreen';
+import MechanicLocationScreen from '../screens/Mechanic/MechanicLocationScreen';
 
 
 
@@ -29,6 +30,7 @@ const MechanicStack = () => {
            <Drawer.Screen name='MapViewScreen' component={MechanicMapViewScreen} options={{headerShown:false}} />
            <Drawer.Screen name='MechanicAccountScreen' component={MechanicAccountScreen} options={{headerShown:false}} />
            <Drawer.Screen name='MechanicProfile' component={MechanicProfile} options={{headerShown:false}} />
+           <Drawer.Screen name='MechanicLocationScreen' component={MechanicLocationScreen} options={{headerShown:false}} />
            <Drawer.Screen name='ServiceRequestsScreen' component={ServiceRequestsScreen} options={{headerShown:false}} />
            <Drawer.Screen name='AcceptedRequestScreen' component={AcceptedRequestScreen} options={{headerShown:false}} />
            <Drawer.Screen name='BottomSheetExample' component={BottomSheetExample} options={{headerShown:false}} />

@@ -8,35 +8,72 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import * as Location from 'expo-location';
 
 const FindMechanicScreen = () => {
-  
-  const [mechanics, setMechanics] = useState([]);
-  const navigation = useNavigation();
+ 
+    // current Location
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialRegion, setInitialRegion] = useState(null);
 
   useEffect(() => {
    
     fetchMechanics(); // Fetch mechanic data
   }, []);
+//  *******************
+const [mechanics, setMechanics] = useState([
+   { id: 1, name: 'Mechanic 1', latitude: 37.78825, longitude: -122.4324 ,time:30,chargs:100},
+   { id: 2, name: 'Mechanic 2', latitude: 37.7749, longitude: -122.4194,time:30,chargs:100 },
+   // Add more mechanic data as needed
+ ]);
 
-  // Dummy mechanic data for demonstration
-  const fetchMechanics = () => {
-    const dummyMechanics = [
-      { id: 1, name: 'Mechanic Name', distance: '2.3 km' },
-      { id: 2, name: 'Mechanic 2', distance: '3.5 km' },
-      { id: 3, name: 'Mechanic 3', distance: '4.1 km' },
-      // Add more mechanic data as needed
-    ];
-    setMechanics(dummyMechanics);
+
+
+     // back functionality
+     const navigation = useNavigation();
+     const handleBack = () => {navigation.navigate('UserHomeScreen')};
+
+  const [modalVisible, setModalVisible] = useState(false);
+  
+
+  const handleMarkerPress = () => {
+    setModalVisible(true);
   };
-
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  
+  useEffect(() => {
+    
+    return () => {
+      handleMarkerPress()
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
-    <View style={styles.inputContainer}>
-    <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.backButton}>
-              <AntDesign name="arrowleft" color={'#1697c7'} size={25} />
-    </TouchableOpacity>
-        <TextInput style={styles.textInput}  editable={false} />
-      </View>
+   
+             {initialRegion && (
+        <MapView style={styles.map} initialRegion={initialRegion} >
+          {currentLocation && (
+            <Marker
+              
+              coordinate={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+              }}
+              tracksViewChanges={true}
+              title="Your Location"
+            />
+            
+          )}
+        </MapView>
+        
+      )}
+
+    <View style={{position:'absolute',top:200,left:100}}>
+      <TouchableOpacity onPress={handleMarkerPress}>
+         <Icon name='map-marker' size={70} color='#1697c7'  />
+         <Text>Mechanic name</Text>
+      </TouchableOpacity>
+    </View>
 
       <Text style={{ marginLeft: 30,marginTop:10, fontSize: 25, color: '#1697c7', fontWeight: 'bold' }}>All Mechanic</Text>
       

@@ -21,6 +21,7 @@
         // Login functionality
             const handleLogin = ({props}) => {
                 const dummyPassword = '123';
+                
 
                 // Check if username and password match dummy data
                 if (username === "admin" && password === dummyPassword) {
@@ -99,7 +100,8 @@
                             <TouchableOpacity style={
                                     styles.loginButton
                                 }
-                                onPress={handleLogin}>
+                                onPress={handleLogin}
+                                >
                                 <Text style={
                                     styles.loginButtonText
                                 }>Login</Text>

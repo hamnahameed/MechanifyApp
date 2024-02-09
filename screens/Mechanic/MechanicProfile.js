@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
+
 const MechanicProfile = () => {
+ 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState('John Doe');
   const [phone, setPhone] = useState('(123) 456-7890');

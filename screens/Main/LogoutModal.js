@@ -20,7 +20,7 @@ const LogoutModal = () => {
     console.log("logout");
     
     await AsyncStorage.removeItem('token');
-    setModalVisible(false);
+    await AsyncStorage.removeItem('user');
     myContext.setAuthRefresh(!myContext.auth)
   };
 

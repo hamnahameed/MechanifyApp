@@ -92,9 +92,9 @@ const MechanicAccountScreen = ({ route }) => {
                 latitude: latitude,
                 longitude: longitude,
                 phoneNum: phone,
-                services:selectedTeams
+                services:selectedService
             }
-            console.log(obj);
+            console.log(obj,"obj to send");
 
             const token = await getTokenFromStorage();
             const response = await axiosconfig.put('/auth/updateuser', obj, {
@@ -132,7 +132,7 @@ const MechanicAccountScreen = ({ route }) => {
                     <View style={styles.container}>
 
                         <TopBar navigation={navigation} />
-                        <ScrollView showsVerticalScrollIndicator={false}>
+                        <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
                             <View style={styles.background}>
                                 {/* User Icon */}
                                 <View style={styles.userIconContainer}>
@@ -253,7 +253,8 @@ const MechanicAccountScreen = ({ route }) => {
                                             onMultiSelect={onMultiChange()}
                                             onTapClose={onMultiChange()}
                                             isMulti
-                                            
+                                            listOptionProps={{ nestedScrollEnabled: true }}
+                                            fixedHeight={true}
                                 
                                         />
                                     </View>

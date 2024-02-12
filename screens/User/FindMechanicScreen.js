@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert,Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -11,18 +11,22 @@ import { getTokenFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
 import LoadingScreen from '../Main/LoadingScreen';
+import RBSheet from "react-native-raw-bottom-sheet";
+import RequestSheet from '../../components/RequestSheet';
 
 const FindMechanicScreen = ({ navigation }) => {
   const myContext = useContext(AppContext)
+  const refRBSheet = useRef();
+  const [selectedMechanic, setSelectedMechanic] = useState(null)
   // current Location
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-// fetchMechanics(); // Fetch mechanic data
+    // fetchMechanics(); // Fetch mechanic data
   }, []);
-  
+
   const [mechanics, setMechanics] = useState([
     { id: 1, name: 'Mechanic 1', latitude: 37.78825, longitude: -122.4324, time: 30, chargs: 100 },
     { id: 2, name: 'Mechanic 2', latitude: 37.7749, longitude: -122.4194, time: 30, chargs: 100 },
@@ -42,7 +46,7 @@ const FindMechanicScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-   return () => {
+    return () => {
       handleMarkerPress()
     };
   }, []);
@@ -52,47 +56,48 @@ const FindMechanicScreen = ({ navigation }) => {
   };
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            setLoading(true);
+      try {
+        setLoading(true);
 
-            const obj={
-              coordinates:{
-                latitude:myContext.latitude,
-                longitude:myContext.longitude
-            }
-            }
-            const token = await getTokenFromStorage();
-            const response = await axiosconfig.post('/auth/getMechanics',obj, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log(response?.data, "res");
-            setMechanics(response?.data)
-           
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                Alert.alert(error.response?.data?.message || "An Error Occured")
-            }
-        } finally {
-            setLoading(false);
+        const obj = {
+          coordinates: {
+            latitude: myContext.latitude,
+            longitude: myContext.longitude
+          }
         }
+        const token = await getTokenFromStorage();
+        const response = await axiosconfig.post('/auth/getMechanics', obj, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response?.data, "res");
+        setMechanics(response?.data)
+
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          Alert.alert(error.response?.data?.message || "An Error Occured")
+        }
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
+
 
   return (
     <>
-    {loading? <LoadingScreen/>:
-     <SafeAreaView style={{ flex: 1 }}>
-     <View style={styles.container}>
-       <TopBar navigation={navigation} />
-       <TouchableOpacity onPress={handleLocationInputPress} style={styles.location}>
-         <Icon name='map-marker' size={20} color='#1697c7' />
-         <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
-       </TouchableOpacity>
-       {/* {initialRegion && (
+      {loading ? <LoadingScreen /> :
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <TopBar navigation={navigation} />
+            <TouchableOpacity onPress={handleLocationInputPress} style={styles.location}>
+              <Icon name='map-marker' size={20} color='#1697c7' />
+              <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
+            </TouchableOpacity>
+            {/* {initialRegion && (
 <MapView style={styles.map} initialRegion={initialRegion} >
 {currentLocation && (
  <Marker
@@ -117,59 +122,87 @@ const FindMechanicScreen = ({ navigation }) => {
 </TouchableOpacity>
         </View> */}
 
-       <Text style={{ marginLeft: 30, 
-         marginTop: 10, 
-         fontSize: 25, 
-         color: '#1697c7', fontWeight: 'bold' }}>All Mechanic</Text>
+            <Text style={{
+              marginLeft: 30,
+              marginTop: 10,
+              fontSize: 25,
+              color: '#1697c7', fontWeight: 'bold'
+            }}>All Mechanic</Text>
 
 
-       {/* Mechanic list */}
-       <FlatList
+            {/* Mechanic list */}
+            <FlatList
 
-         data={mechanics}
-         keyExtractor={(item,ind) => ind.toString()}
-         renderItem={({ item }) => (
-           <View style={styles.card}>
-             <Text style={styles.mechanicName}>{item.username}</Text>
-             <View style={styles.infoContainer}>
-               <View style={styles.infoColumn}>
-                 <Text style={styles.infoLabel}>Charges:</Text>
-                 <Text style={styles.infoValue}>300</Text>
-               </View>
-               <View style={styles.infoColumn}>
-                 <Text style={styles.infoLabel}>Time:</Text>
-                 <Text style={styles.infoValue}>10mins</Text>
-               </View>
-             </View>
-             <View style={styles.infoContainer}>
-               <View style={styles.infoColumn}>
-                 <Text style={styles.infoLabel}>Reviews:</Text>
-                 <Text style={styles.infoValue}>4.5</Text>
-               </View>
-               <View style={styles.infoColumn}>
-                 <Text style={styles.infoLabel}>Distance:</Text>
-                 <Text style={styles.infoValue}>{item.distance}</Text>
-               </View>
-             </View>
-             <Text style={styles.button} onPress={() => navigation.navigate('MechanicAcceptedScreen')} >Request Service</Text>
-           </View>
-         )}
-       />
+              data={mechanics}
+              keyExtractor={(item, ind) => ind.toString()}
+              renderItem={({ item }) => (
+                <>
+                  <View style={styles.card}>
+                    <Text style={styles.mechanicName}>{item.username}</Text>
+                    <View style={styles.infoContainer}>
+                      <View style={styles.infoColumn}>
+                        <Text style={styles.infoLabel}>Charges:</Text>
+                        <Text style={styles.infoValue}>300</Text>
+                      </View>
+                      <View style={styles.infoColumn}>
+                        <Text style={styles.infoLabel}>Time:</Text>
+                        <Text style={styles.infoValue}>10mins</Text>
+                      </View>
+                    </View>
+                    <View style={styles.infoContainer}>
+                      <View style={styles.infoColumn}>
+                        <Text style={styles.infoLabel}>Reviews:</Text>
+                        <Text style={styles.infoValue}>4.5</Text>
+                      </View>
+                      <View style={styles.infoColumn}>
+                        <Text style={styles.infoLabel}>Distance:</Text>
+                        <Text style={styles.infoValue}>{item.distance}</Text>
+                      </View>
+                    </View>
+                    <Text style={styles.button} onPress={() => {
+                      setSelectedMechanic(item)
+                      refRBSheet.current.open()}} >Request Service</Text>
+                  </View>
 
-     </View>
-   </SafeAreaView>
 
-    
-    }
+                </>
+
+              )}
+            />
+
+          </View>
+
+          <RBSheet
+          animationType='fade'
+          height={Dimensions.get('window').height * 0.5}
+            ref={refRBSheet}
+            closeOnDragDown={true}
+            closeOnPressMask={false}
+            customStyles={{
+              wrapper: {
+                backgroundColor: "transparent"
+              },
+              draggableIcon: {
+                backgroundColor: "#000"
+              }
+            }}
+          >
+            <RequestSheet navigation={navigation} mechanic={selectedMechanic}/>
+          </RBSheet>
+
+        </SafeAreaView>
+
+
+      }
     </>
-   
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop:moderateScale(20)
+    marginTop: moderateScale(20)
   },
   location: {
     backgroundColor: 'whitesmoke',

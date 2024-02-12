@@ -23,6 +23,7 @@ const App = (props) => {
   const [userToken, setUserToken] = React.useState(null);
   const [authRefresh, setAuthRefresh] = React.useState(false);
   const [userRefresh, setUserRefresh] = useState(false)
+  const [requestRefresh, setRequestRefresh] = useState(false)
   const userSetting = {
     latitude,
     setLatitude,
@@ -33,14 +34,16 @@ const App = (props) => {
     authRefresh,
     setAuthRefresh,
     userRefresh,
-    setUserRefresh
+    setUserRefresh,
+    requestRefresh,
+    setRequestRefresh
   }
   React.useEffect(() => {
     const fetchToken = async () => {
       const getToken = await getTokenFromStorage();
       const getUser = await getUserFromStorage();
       setUserToken(getToken);
-      setUserRole(getUser.role);
+      setUserRole(getUser?.role);
     };
 
     fetchToken();
@@ -52,7 +55,7 @@ const App = (props) => {
     <AppContext.Provider value={userSetting}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!userToken ?
+          {!userToken || !userRole ?
             <Stack.Screen name='Auth' component={AuthStack} options={{ headerShown: false }} /> :
 
             <>
@@ -62,7 +65,9 @@ const App = (props) => {
                   <Stack.Screen name='Admin' component={AdminStack} options={{ headerShown: false }} /> :
                   userRole == 'mechanic' ?
                     <Stack.Screen name='Mechanic' component={MechanicStack} options={{ headerShown: false }} /> :
-                    <Stack.Screen name='Shop' component={ShopStack} options={{ headerShown: false }} />
+                    userRole == 'shop' ?
+                    <Stack.Screen name='Shop' component={ShopStack} options={{ headerShown: false }} />:
+                    <></>
               }
 
 

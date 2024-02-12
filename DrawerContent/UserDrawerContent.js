@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity,Image,StyleSheet,ScrollView,Modal} from 'r
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import LogoutModal from '../screens/Main/LogoutModal';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 
@@ -64,7 +65,13 @@ const UserDrawerContent = ({ navigation ,username}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('')}>
+        onPress={() => navigation.navigate('MechanicAcceptedScreen')}>
+        <MaterialCommunityIcons name="list-status" size={20} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Request Status</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
+        onPress={() => navigation.navigate('RequestHistory')}>
         <FeatherIcon name="clock" size={20} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Request History</Text>
       </TouchableOpacity>

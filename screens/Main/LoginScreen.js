@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     View,
     ImageBackground,
@@ -7,38 +7,62 @@ import {
     TouchableOpacity,
     Text,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Alert
 } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
+import axios from 'axios';
+import axiosconfig from '../../axios/axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppContext from '../../Provider/AppContext';
 
-
-
-const LoginScreen = ({ navigation }) => { // login functioanlity
-    const [username, setUsername] = useState('');
+const LoginScreen = ({ navigation }) => { 
+    const myContext = useContext(AppContext)
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+  // Login functionality
+    const handleLogin = async () => {
+        try {
+            setLoading(true);
+           
+            const obj = {
+                email,
+                password,
+            }
+            // console.log(obj);
+            const response = await axiosconfig.post('/auth/login', obj);
+            await AsyncStorage.setItem('token', response?.data?.token);
+            await AsyncStorage.setItem('user', JSON.stringify(response?.data?.data));
+            myContext.setAuthRefresh(!myContext.authRefresh)
+            Alert.alert(response?.data?.message);
+            console.log(response?.data?.message);
+            if (response?.data?.data?.role == "admin") {
+                navigation.navigate('Admin')
+        
+                } else if (response?.data?.data?.role == "user") {
+                    navigation.navigate('User');
+        
+                } else if (response?.data?.data?.role == "mechanic") {
+                    navigation.navigate('Mechanic');
+        
+                } else if (response?.data?.data?.role == "shop") {
+                    navigation.navigate('Shop');
+        
+                } else {
+                    alert('Invalid username or password');
+                }
 
-
-    // Login functionality
-    const handleLogin = ({ props }) => {
-        const dummyPassword = '123';
-      
-
-        // Check if username and password match dummy data
-        if (username === "admin" && password === dummyPassword) {
-        navigation.navigate('Admin')
-
-        } else if (username === "User" && password === dummyPassword) {
-            navigation.navigate('User');
-
-        } else if (username === "Mechanic" && password === dummyPassword) {
-            navigation.navigate('Mechanic');
-
-        } else if (username === "Shop" && password === dummyPassword) {
-            navigation.navigate('Shop');
-
-        } else {
-            alert('Invalid username or password');
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                Alert.alert(error.response?.data?.message || 'An Error Occurred');
+            }
+        } finally {
+            setLoading(false);
         }
+        
+       
     };
 
     // signup functionality
@@ -72,7 +96,7 @@ const LoginScreen = ({ navigation }) => { // login functioanlity
                                 placeholder="username"
                                 placeholderTextColor="black"
                                 onChangeText={
-                                    (text) => setUsername(text)
+                                    (text) => setEmail(text)
                                 } />
                         </View>
                         <Text style={styles.placeholder}>Password</Text>
@@ -97,15 +121,18 @@ const LoginScreen = ({ navigation }) => { // login functioanlity
                                 styles.forgotPasswordText
                             }>Forgot Password?</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={
-                            styles.loginButton
-                        }
-                            onPress={handleLogin}
-                        >
-                            <Text style={
-                                styles.loginButtonText
-                            }>Login</Text>
-                        </TouchableOpacity>
+                        {loading ? <ActivityIndicator size={'large'} color={'#1697C7'} /> :
+                               <TouchableOpacity style={
+                                styles.loginButton
+                            }
+                                onPress={handleLogin}
+                            >
+                                <Text style={
+                                    styles.loginButtonText
+                                }>Login</Text>
+                            </TouchableOpacity>
+                            }
+                        
 
                         <Text style={
                             {

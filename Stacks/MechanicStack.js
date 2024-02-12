@@ -15,9 +15,6 @@ import LogoutModal from '../screens/Main/LogoutModal';
 import MechanicMapViewScreen from '../screens/Mechanic/MechanicMapViewScreen';
 import MechanicLocationScreen from '../screens/Mechanic/MechanicLocationScreen';
 
-
-
-
 const Drawer = createDrawerNavigator();
 
 const MechanicStack = () => { 

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { moderateScale } from 'react-native-size-matters';
 import AppContext from '../../Provider/AppContext';
@@ -13,6 +13,7 @@ import Geocoder from 'react-native-geocoding';
 
 const MechanicLocationScreen = ({ navigation }) => {
   const myContext = useContext(AppContext);
+  const [loading, setLoading] = useState(false);
 
 
   const mapRef = useRef(null);
@@ -38,7 +39,7 @@ const MechanicLocationScreen = ({ navigation }) => {
       return;
     }
     let location = await Location.getCurrentPositionAsync({});
-     // console.log(location?.coords?.latitude,location?.coords?.longitude);
+    // console.log(location?.coords?.latitude,location?.coords?.longitude);
     myContext.setLatitude(location?.coords?.latitude);
     myContext.setLongitude(location?.coords?.longitude);
     if (mapRef.current) {
@@ -49,7 +50,7 @@ const MechanicLocationScreen = ({ navigation }) => {
         longitudeDelta: 0.0421,
       }, 1000);
     }
-    
+
   };
   const getAddressFromCoordinates = async (latitude, longitude) => {
     try {
@@ -60,25 +61,34 @@ const MechanicLocationScreen = ({ navigation }) => {
       console.error("Error fetching address:", error);
     }
   };
-  const handleSave = () => {
-    getAddressFromCoordinates(myContext.latitude, myContext.longitude);
-    console.log(myContext.address);
-    navigation.navigate('MechanicHomeScreen')
+  const handleSave = async () => {
+    try {
+      setLoading(true)
+      await getAddressFromCoordinates(myContext.latitude, myContext.longitude);
+      console.log(myContext.address);
+      navigation.navigate('MechanicAccountScreen', { latitude: myContext.latitude, longitude: myContext.longitude, address: myContext.address })
+    } catch (err) {
+      console.log(err);
+    }
+    finally {
+      setLoading(false);
+    }
+
   };
 
-return (
+  return (
     <View style={styles.container}>
-    <MapView
-      ref={mapRef}
-      style={styles.map}
-      initialRegion={{
-        latitude: myContext.latitude,
-        longitude: myContext.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
-      onMapReady={getCurrentLocation} 
-      // showsUserLocation={true}
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={{
+          latitude: myContext.latitude,
+          longitude: myContext.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        onMapReady={getCurrentLocation}
+        // showsUserLocation={true}
         // showsMyLocationButton={true}
         followsUserLocation={true}
         showsCompass={true}
@@ -91,9 +101,9 @@ return (
           myContext.setLatitude(newRegion.latitude);
           myContext.setLongitude(newRegion.longitude);
         }}
-    >
-    </MapView>
-    <Marker
+      >
+      </MapView>
+      <Marker
         style={styles.markerFixed}
         title='You are here'
         description='This is a description'
@@ -106,7 +116,7 @@ return (
           const { latitude: markerLatitude, longitude: markerLongitude } = e.nativeEvent.coordinate;
           myContext.setLatitude(markerLatitude);
           myContext.setLongitude(markerLongitude);
-          
+
         }}
       >
         <View>
@@ -116,7 +126,7 @@ return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', margin: moderateScale(10), flex: 1 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.icon}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
               <AntDesign name="arrowleft" color={'#1697C7'} size={25} />
             </TouchableOpacity>
           </View>
@@ -138,6 +148,7 @@ return (
               console.log(details?.geometry?.location);
               myContext.setLatitude(details?.geometry?.location?.lat);
               myContext.setLongitude(details?.geometry?.location?.lng);
+             getAddressFromCoordinates(myContext.latitude, myContext.longitude)
               mapRef.current.animateToRegion({
                 latitude: details?.geometry?.location?.lat,
                 longitude: details?.geometry?.location?.lng,
@@ -153,12 +164,17 @@ return (
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1.5 }}>
-          <TouchableOpacity onPress={()=>handleSave()}  style={styles.btn}>
-            <Text style={styles.btnText}>Save</Text>
-          </TouchableOpacity>
+          {loading ? <ActivityIndicator size={'large'} color={'#1697C7'} /> :
+
+            <TouchableOpacity onPress={() => handleSave()} style={styles.btn}>
+              <Text style={styles.btnText}>Save</Text>
+            </TouchableOpacity>
+
+          }
         </View>
+
       </View>
-  </View>
+    </View>
   );
 };
 

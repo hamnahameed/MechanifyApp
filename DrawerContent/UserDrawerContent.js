@@ -11,11 +11,12 @@ const UserDrawerContent = ({ navigation ,username}) => {
   const [modalVisible, setModalVisible] = useState(false);
   
   // Function to handle logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Implement your logout logic here
     // For example, you can clear user data, reset authentication, etc.
     // Then, close the modal and navigate to the login screen
     setModalVisible(false);
+   
     // Implement your navigation logic here
   };
   return (

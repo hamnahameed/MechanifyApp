@@ -7,220 +7,160 @@ import {
     TouchableOpacity,
     Text,
     StyleSheet,
-    
+    Alert,
+    SafeAreaView,
+
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { FontAwesome } from '@expo/vector-icons'; // You can use any icon library you prefer
+import { ScrollView } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
+import axios from 'axios';
+import axiosconfig from '../../axios/axios'
+import { ActivityIndicator } from 'react-native-paper';
 
 
 const SignupScreen = ({ navigation }) => {
-    const handleSignUp = () => {
-        navigation.navigate('Login'); // Navigate to SignUp screen
+    const [loading, setLoading] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('user');
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [cPassword, setCPassword] = useState("");
+
+    const handleSignUp = async () => {
+        try {
+            setLoading(true);
+            if (password !== cPassword) {
+                Alert.alert("Confirm Password not match with password");
+                return;
+            }
+            const obj = {
+                username:userName,
+                email,
+                password,
+                role:selectedRole
+            }
+            // console.log(obj);
+            const response = await axiosconfig.post('/auth/signup', obj);
+            Alert.alert(response?.data?.message);
+            navigation.navigate('Login');
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                Alert.alert(error.response?.data?.message || 'An Error Occurred');
+            }
+        } finally {
+            setLoading(false);
+        }
+
     };
 
-const [selectedRole, setSelectedRole] = useState('user'); // Default role is 'user'
 
-  const handleRoleChange = (role) => {
-    setSelectedRole(role);
-    
-  };
-
-  const handleSubmit = () => {
-    // Here, you can use the `selectedRole` state to determine which role the user selected.
-    // You can send this value to your backend for user registration.
-
-    console.log('Selected Role:', selectedRole);
-    // Perform the signup logic based on the selected role.
-  };
+    const handleRoleChange = (role) => {
+        setSelectedRole(role);
+    };
     return (
-
-        // background
-        <View style={
-            styles.container
-        }>
-            <ImageBackground source={
-                require('../../assets/bg.jpeg')
-            }
-                style={
-                    styles.backgroundImage
-                }>
-                <View style={
-                    styles.logoContainer
-                }>
-
-                    {/* logo */}
-                    <View style={
-                        styles.logo
-                    }>
-                        <Image source={
-                            require('../../assets/logo2.png')
-                        }
-                            style={
-                                styles.logoImage
-                            } />
-                    </View>
-                </View>
-
-                {/* signup form  */}
-                <View style={
-                    styles.formContainer
-                }>
-
-                    <Text style={
-                        styles.placeholder
-                    }>Username</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                            require('../../assets/userIcon.png')
-                        }
-                            style={
-                                styles.inputIcon
-                            } />
-
-                        <TextInput style={
-                            styles.input
-                        }
-                            placeholder="username"
-                            placeholderTextColor="black"
-                            onChangeText={
-                                (text) => setUsername(text)
-                            } />
-                    </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <ScrollView>
+                <View style={styles.container}>
+                    <ImageBackground source={require('../../assets/bg.jpeg')}
+                        style={styles.backgroundImage}>
+                        <View style={styles.logoContainer}>
+                            <View style={styles.logo}>
+                                <Image source={require('../../assets/logo2.png')}
+                                    style={styles.logoImage} />
+                            </View>
+                        </View>
+                        {/* signup form  */}
+                        <View style={styles.formContainer}>
+                            <Text style={styles.placeholder}>Username</Text>
+                            <View style={styles.inputContainer}>
+                                <Image source={require('../../assets/userIcon.png')} style={styles.inputIcon} />
+                                <TextInput style={styles.input} placeholder="username"
+                                    value={userName}
+                                    placeholderTextColor="black"
+                                    onChangeText={
+                                        (text) => setUserName(text)
+                                    } />
+                            </View>
 
 
-                    <Text style={
-                        styles.placeholder
-                    }>Email Address</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                            require('../../assets/email.png')
-                        }
-                            style={
-                                styles.inputIcon
-                            } />
-                        <TextInput style={
-                            styles.input
-                        }
-                            placeholder="email"
-                            placeholderTextColor="black"
-                            onChangeText={
-                                (text) => setEmail(text)
-                            } />
-                    </View>
+                            <Text style={styles.placeholder}>Email Address</Text>
+                            <View style={styles.inputContainer}>
+                                <Image source={require('../../assets/email.png')}
+                                    style={styles.inputIcon} />
+                                <TextInput style={styles.input}
+                                    value={email}
+                                    placeholder="email"
+                                    placeholderTextColor="black"
+                                    onChangeText={
+                                        (text) => setEmail(text)
+                                    } />
+                            </View>
 
-                    <Text style={
-                        styles.placeholder
-                    }>Password</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                            require('../../assets/passIcon.png')
-                        }
-                            style={
-                                styles.inputIcon
-                            } />
-                        <TextInput style={
-                            styles.input
-                        }
-                            placeholder="password"
-                            placeholderTextColor="black"
-                            secureTextEntry
-                            onChangeText={
-                                (text) => setPassword(text)
-                            } />
-                    </View>
-                    <Text style={
-                        styles.placeholder
-                    }>Re-Enter Password</Text>
-                    <View style={
-                        styles.inputContainer
-                    }>
-                        <Image source={
-                            require('../../assets/passIcon.png')
-                        }
-                            style={
-                                styles.inputIcon
-                            } />
-                        <TextInput style={
-                            styles.input
-                        }
-                            placeholder="confirm password"
-                            placeholderTextColor="black"
-                            secureTextEntry
-                            onChangeText={
-                                (text) => setPassword(text)
-                            } />
+                            <Text style={styles.placeholder}>Password</Text>
+                            <View style={styles.inputContainer}>
+                                <Image source={require('../../assets/passIcon.png')} style={styles.inputIcon} />
+                                <TextInput style={styles.input}
+                                    value={password}
+                                    placeholder="password"
+                                    placeholderTextColor="black"
+                                    secureTextEntry
+                                    onChangeText={
+                                        (text) => setPassword(text)
+                                    } />
+                            </View>
 
-                    </View>
- <Text
- style={
-                        styles.placeholder
-                    }>Login As</Text>
+                            <Text style={styles.placeholder}>Re-Enter Password</Text>
+                            <View style={styles.inputContainer}>
+                                <Image source={require('../../assets/passIcon.png')}
+                                    style={styles.inputIcon} />
+                                <TextInput style={styles.input}
+                                    value={cPassword}
+                                    placeholder="confirm password"
+                                    placeholderTextColor="black"
+                                    secureTextEntry
+                                    onChangeText={
+                                        (text) => setCPassword(text)
+                                    } />
 
-                    <View style={[styles.inputContainer,{height:50}] }>
-      <Picker style={
-                            styles.input
-                           
-                        }
-                        selectedValue={selectedRole}
-        onValueChange={(itemValue, itemIndex) => handleRoleChange(itemValue)}
-      
+                            </View>
 
-      >
-      
-     
-        <Picker.Item label="User" value="user"  />
-        <Picker.Item label="Mechanic" value="mechanic" />
-        <Picker.Item label="Shop Owner" value="shopOwner" />
-      </Picker>
-      </View>
-
-
-
-      
-                    <TouchableOpacity style={
-                        styles.loginButton
-                    }
-                        onPress={handleSignUp}>
-                        <Text style={
-                            styles.loginButtonText
-                        }>Sign up</Text>
-                    </TouchableOpacity>
-
-                    <Text style={
-                        {
-                            textAlign: "center",
-                            fontSize: 15,
-                            fontWeight: "bold"
-                        }
-                    }>Already have an account?
-                    </Text>
-                    <TouchableOpacity onPress={handleSignUp}>
-                        <Text style={
-                            {
-                                textAlign: "center",
-                                color: "#1697C7",
-                                fontSize: 15,
+                            <Text style={styles.placeholder}>Login As</Text>
+                            <View style={[styles.inputContainer, { height: 50 }]}>
+                                <Picker style={styles.input}
+                                    selectedValue={selectedRole}
+                                    onValueChange={(itemValue, itemIndex) => handleRoleChange(itemValue)}>
+                                    <Picker.Item label="User" value="user" />
+                                    <Picker.Item label="Mechanic" value="mechanic" />
+                                    <Picker.Item label="Shop Owner" value="shopOwner" />
+                                </Picker>
+                            </View>
+                            {loading ? <ActivityIndicator size={'large'} color={'#1697C7'} /> :
+                                <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
+                                    <Text style={styles.loginButtonText}>Sign up</Text>
+                                </TouchableOpacity>
                             }
-                        }>Sign In</Text>
-                    </TouchableOpacity>
 
-                 
+
+                            <Text style={{ textAlign: "center", fontSize: 15, fontWeight: "bold" }}>Already have an account?</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                                <Text style={{ textAlign: "center", color: "#1697C7", fontSize: 15 }}>Sign In</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ImageBackground>
                 </View>
-            </ImageBackground>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
+
     );
 };
 
 // styling
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        marginTop: moderateScale(30)
     },
     backgroundImage: {
         flex: 1,

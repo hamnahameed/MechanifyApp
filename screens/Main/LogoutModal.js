@@ -1,24 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppContext from '../../Provider/AppContext';
 
 
 
 
 const LogoutModal = () => {
+  const myContext = useContext(AppContext)
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
   // Function to handle logout
-  const handleLogout = () => {
-    // Implement your logout logic here
-    // For example, you can clear user data, reset authentication, etc.
-    // Then, close the modal and navigate to the login screen
+  const handleLogout = async () => {
+    console.log("logout");
+    
+    await AsyncStorage.removeItem('token');
     setModalVisible(false);
-    // Implement your navigation logic here
+    myContext.setAuthRefresh(!myContext.auth)
   };
 
   return (
@@ -53,10 +56,9 @@ const LogoutModal = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={handleLogout}
+              
             >
-              <Text style={styles.buttonText}  onPress={() => {navigation.navigate("Login");
-              setModalVisible(false);}}>Yes</Text>
+              <Text style={styles.buttonText}  onPress={handleLogout}>Yes</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

@@ -8,15 +8,14 @@ import {
     Image
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 const AdminAccountScreen = () => {
-    
-  const navigation = useNavigation();
 
-  const openDrawer = () => {
-    navigation.openDrawer();
-  };
+    const navigation = useNavigation();
+    const openDrawer = () => {
+        navigation.openDrawer();
+    };
 
     return (
         <View style={
@@ -28,34 +27,34 @@ const AdminAccountScreen = () => {
             }>
             </View>
 
-          
-{/* open drawer */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 40 ,top:30}}>
-      <TouchableOpacity onPress={openDrawer}>
-      <Icon name="bars"
+
+            {/* open drawer */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 40, top: 30 }}>
+                <TouchableOpacity onPress={openDrawer}>
+                    <Icon name="bars"
                         size={30}
-                        color="#1697C7" top={5}/>
-      </TouchableOpacity>
-     
-     {/* logo */}
-      <Image style={
-                        {
-                            width: 200,
-                            height: 150,
-                            position:'absolute',
-                            left:250,
-                            top:-40
-                           
-                        }
+                        color="#1697C7" top={5} />
+                </TouchableOpacity>
+
+                {/* logo */}
+                <Image style={
+                    {
+                        width: 200,
+                        height: 150,
+                        position: 'absolute',
+                        left: 250,
+                        top: -40
+
                     }
+                }
                     source={
                         require('../../assets/logo2.png')
-                    }/>
-    </View>
-   
-         
-               
-            
+                    } />
+            </View>
+
+
+
+
 
             {/* User Icon */}
             <View style={
@@ -64,21 +63,21 @@ const AdminAccountScreen = () => {
                 <Icon name="user"
                     size={70}
                     color="black" />
-                
-                
-        
-        </View>
 
-        <View>
-        <Text style={{fontSize:15,color:'white',padding:5,textAlign:'center'}}>Admin</Text>
-        <Text style={{fontSize:10,color:'white' ,padding:5,textAlign:'center'}}>admin123@gmail.com</Text>
-        </View>
+
+
+            </View>
+
+            <View>
+                <Text style={{ fontSize: 15, color: 'white', padding: 5, textAlign: 'center' }}>Admin</Text>
+                <Text style={{ fontSize: 10, color: 'white', padding: 5, textAlign: 'center' }}>admin123@gmail.com</Text>
+            </View>
 
             {/* Heading */}
             <View style={
                 styles.headingContainer
             }>
-            <Text style={
+                <Text style={
                     styles.heading
                 }>My Account</Text>
                 <TouchableOpacity style={
@@ -86,41 +85,41 @@ const AdminAccountScreen = () => {
                 }>
                     <Icon name="pencil"
                         size={20}
-                        color="#1697C7"/>
+                        color="#1697C7" />
                 </TouchableOpacity>
 
-                
+
             </View>
-<View>
-            <TextInput style={
+            <View>
+                <TextInput style={
                     styles.input
                 }
-                placeholder="First Name"/>
-                     <TextInput style={
+                    placeholder="First Name" />
+                <TextInput style={
                     styles.input
                 }
-                placeholder="Last Name"/>
-            <TextInput style={
+                    placeholder="Last Name" />
+                <TextInput style={
                     styles.input
                 }
-                placeholder="Email"/>
-            <TextInput style={
+                    placeholder="Email" />
+                <TextInput style={
                     styles.input
                 }
-                placeholder="Password"
-                secureTextEntry={true}/>
-                     <TextInput style={
+                    placeholder="Password"
+                    secureTextEntry={true} />
+                <TextInput style={
                     styles.input
                 }
-                placeholder="Address"/>
-                     <TextInput style={
+                    placeholder="Address" />
+                <TextInput style={
                     styles.input
                 }
-                placeholder="city"/>  
-                </View>
-    </View>
+                    placeholder="city" />
+            </View>
+        </View>
     );
-    
+
 };
 
 const styles = StyleSheet.create({
@@ -144,13 +143,13 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        borderWidth:1,
-        borderColor:'white',
+        borderWidth: 1,
+        borderColor: 'white',
         backgroundColor: 'white', // Set your preferred color
         justifyContent: 'center',
         alignItems: 'center',
-        left:160,
-        top:3
+        left: 160,
+        top: 3
     },
     headingContainer: {
         flexDirection: 'row',
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 8,
         marginVertical: 15,
-        marginLeft:20,
+        marginLeft: 20,
         paddingHorizontal: 15
     }
 });

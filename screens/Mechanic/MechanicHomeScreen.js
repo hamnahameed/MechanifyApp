@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Modal, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Location from 'expo-location';
 import AppContext from '../../Provider/AppContext';
@@ -7,11 +7,17 @@ import Geocoder from 'react-native-geocoding';
 import { moderateScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TopBar from '../../components/TopBar';
+import axios from 'axios';
+import axiosconfig from '../../axios/axios'
+import { getTokenFromStorage } from '../../authUtils/authUtils';
 
 
 // Import your modal component here if you have one
 const MechanicHomeScreen = ({ navigation }) => {
   const myContext = useContext(AppContext)
+  const [loading, setLoading] = useState(false)
+  const [address, setAddress] = useState(myContext.address)
+
   Geocoder.init("AIzaSyCYvOXB3SFyyeR0usVOgnLyoDiAd2XDunU");
   // current Location
   useEffect(() => {
@@ -54,7 +60,30 @@ const MechanicHomeScreen = ({ navigation }) => {
     closeModal();
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            setLoading(true);
 
+            const token = await getTokenFromStorage();
+            const response = await axiosconfig.get('/auth/getUser', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // console.log(response?.data?.data.address, "res");
+            setAddress(response?.data?.data?.address)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                Alert.alert(error.response?.data?.message || "An Error Occured")
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchData();
+}, [myContext.userRefresh]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -92,10 +121,13 @@ const MechanicHomeScreen = ({ navigation }) => {
             <Text style={styles.tagline}>At your Service</Text>
             <Text style={styles.tagline}>24 / 7</Text>
           </View>
-          <View style={styles.location}>
-            <Icon name='map-marker' size={20} color='#1697c7' />
-            <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
-          </View>
+          {loading? <ActivityIndicator color={"#1697c7"} size={'large'}/>:
+           <View style={styles.location}>
+           <Icon name='map-marker' size={20} color='#1697c7' />
+           <Text style={{ marginLeft: 10, fontSize: 15 }}>{address}</Text>
+         </View>
+          }
+         
           <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: moderateScale(40) }}>
             <Image source={require('../../assets/heroImg2.png')} style={{ width: 300, height: 300, resizeMode:'cover' }} />
           </View>

@@ -73,6 +73,10 @@ const MechanicHomeScreen = ({ navigation }) => {
             });
             // console.log(response?.data?.data.address, "res");
             setAddress(response?.data?.data?.address)
+            if(!response?.data?.data?.address){
+              Alert.alert("Please! complete your profile first..!")
+              navigation.navigate("MechanicAccountScreen")
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Alert.alert(error.response?.data?.message || "An Error Occured")

@@ -15,7 +15,7 @@ import Modal from "react-native-modal";
 
 
 
-const RequestHistory = ({ navigation }) => {
+const ActiveRequests = ({ navigation }) => {
   const myContext = useContext(AppContext)
   const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState([])
@@ -37,7 +37,7 @@ const RequestHistory = ({ navigation }) => {
         });
         console.log(response?.data?.data, "res");
         const filteredRequests = response?.data?.data.filter(
-          (request) => request.currentStatus !== "pending" && request.currentStatus !== "inprogress"
+          (request) => request.currentStatus === "pending" || request.currentStatus === "inprogress"
         );
         console.log(filteredRequests, "filtered");
         setRequests(filteredRequests)
@@ -75,12 +75,19 @@ const RequestHistory = ({ navigation }) => {
     };
   }
 
-  const handleDelete = async () => {
+  
+ 
+  const handleCancel = async () => {
     try {
 
       setloading(true);
+      const obj = {
+        currentStatus: 'cancelledbyuser'
+      }
+      console.log(obj, "obj to send");
+
       const token = await getTokenFromStorage();
-      const response = await axiosconfig.delete(`/delRequest/${requestId}`,{
+      const response = await axiosconfig.put(`/updateRequest/${requestId}`, obj, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -89,6 +96,8 @@ const RequestHistory = ({ navigation }) => {
       Alert.alert(response?.data?.message)
       myContext.setRequestRefresh(!myContext.requestRefresh)
       setModalVisible(!isModalVisible)
+      navigation.navigate('UserHomeScreen');
+
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Alert.alert(error.response?.data?.message || "An Error Occured")
@@ -116,7 +125,7 @@ const RequestHistory = ({ navigation }) => {
               marginTop: 10,
               fontSize: 25,
               color: '#1697c7', fontWeight: 'bold'
-            }}>Request History</Text>
+            }}>Active Requests</Text>
 
 
             {requests.length == 0 ? <View style={{alignItems:'center',flex:1,justifyContent:'center'}}><Text>No Data Avalaible</Text></View>:
@@ -152,7 +161,7 @@ const RequestHistory = ({ navigation }) => {
 
                  <View style={{flexDirection:'row',marginVertical:moderateScale(5),justifyContent:'center'}}>
                    <TouchableOpacity
-                     onPress={()=>navigation.navigate("ViewRequestHistory",{id:item._id})}
+                     onPress={()=>navigation.navigate("MechanicAcceptedScreen",{id:item._id})}
                      style={{
                        backgroundColor: '#000',
                        padding: moderateScale(10),
@@ -178,18 +187,10 @@ const RequestHistory = ({ navigation }) => {
                        marginTop: moderateScale(10),
                        flexDirection: 'row',
                      }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Delete Request"}</Text>
+                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Cancel Request"}</Text>
                    </TouchableOpacity>
                  </View>
-
-
-
-
-
-
-
-
-               </View>
+                 </View>
 
 
              )}
@@ -214,7 +215,7 @@ const RequestHistory = ({ navigation }) => {
                   borderRadius: 5
                 }}
               >
-                <Text>Are you sure you want to delete the request? It can't be undone.</Text>
+                <Text>Are you sure you want to cancel the request? It can't be undone.</Text>
                 <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
                   <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{
                     flex: 1,
@@ -227,7 +228,7 @@ const RequestHistory = ({ navigation }) => {
                   </TouchableOpacity>
                   {isloading? <ActivityIndicator color='#1697c7'/>:
                    <TouchableOpacity
-                    onPress={handleDelete}
+                    onPress={handleCancel}
                     style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
                    <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
                    </TouchableOpacity>
@@ -335,4 +336,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default RequestHistory
+export default ActiveRequests

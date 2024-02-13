@@ -17,8 +17,8 @@ import Modal from "react-native-modal";
 
 
 
-const MechanicAcceptedScreen = ({route}) => {
-
+const ViewRequestHistory = ({route}) => {
+console.log(route.params);
   const myContext = useContext(AppContext)
   console.log(myContext.requestRefresh, 'refresh');
   const [loading, setLoading] = useState(false)
@@ -84,8 +84,7 @@ const MechanicAcceptedScreen = ({route}) => {
         setLoading(true);
 
         const token = await getTokenFromStorage();
-        
-        const res = await axiosconfig.get(`/getRequest/${route?.params?.id}`, {
+      const res = await axiosconfig.get(`/getRequest/${route?.params?.id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -99,8 +98,8 @@ const MechanicAcceptedScreen = ({route}) => {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           });
+      
        
-
 
 
       } catch (error) {
@@ -147,17 +146,12 @@ const MechanicAcceptedScreen = ({route}) => {
     }
 
   }
-  const handleCancel = async () => {
+  const handleDelete = async () => {
     try {
 
       setloading(true);
-      const obj = {
-        currentStatus: 'cancelledbyuser'
-      }
-      console.log(obj, "obj to send");
-
       const token = await getTokenFromStorage();
-      const response = await axiosconfig.put(`/updateRequest/${request._id}`, obj, {
+      const response = await axiosconfig.delete(`/delRequest/${route?.params?.id}`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -166,8 +160,6 @@ const MechanicAcceptedScreen = ({route}) => {
       Alert.alert(response?.data?.message)
       myContext.setRequestRefresh(!myContext.requestRefresh)
       setModalVisible(!isModalVisible)
-      navigation.navigate('UserHomeScreen');
-
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Alert.alert(error.response?.data?.message || "An Error Occured")
@@ -177,6 +169,7 @@ const MechanicAcceptedScreen = ({route}) => {
       setloading(false);
     }
   }
+ 
 
 
   return (
@@ -187,9 +180,8 @@ const MechanicAcceptedScreen = ({route}) => {
             <TopBar navigation={navigation} />
             {!request || !mechanic ?
               <>
-                <View  style={{alignItems:'center',flex:1,justifyContent:'center'}}>
-                  <Text style={{ textAlign: 'center' }}>No Active Request found</Text>
-                  <TouchableOpacity
+                <View><Text style={{ textAlign: 'center' }}>No Active Request found</Text></View>
+                <TouchableOpacity
                   onPress={() => navigation.navigate("FindMechanicScreen")}
                   style={{
                     backgroundColor: '#1697c7',
@@ -200,10 +192,8 @@ const MechanicAcceptedScreen = ({route}) => {
                     marginTop: moderateScale(10),
                     flexDirection: 'row',
                   }}>
-                  <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Find a Mechanic"}</Text>
+                  <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Find Mechanic"}</Text>
                 </TouchableOpacity>
-                  </View>
-               
               </>
               :
               <View style={{ flex: 1 }}>
@@ -237,7 +227,7 @@ const MechanicAcceptedScreen = ({route}) => {
                       <View style={{ flex: 1, padding: moderateScale(5) }}>
                         <Text style={{ color: '#FFF', fontSize: 20 }}>Status:</Text>
                       </View>
-                      <View style={{ flex: 1, backgroundColor: request.currentStatus == "pending" ? "red" : "green", padding: moderateScale(5) }}>
+                      <View style={{ flex: 3, backgroundColor: request.currentStatus == "pending" ? "red" : "green", padding: moderateScale(5) }}>
                         <Text style={{ color: '#FFF', fontSize: 20, textAlign: 'center' }}>{request.currentStatus}</Text>
                       </View>
                     </View>
@@ -276,7 +266,7 @@ const MechanicAcceptedScreen = ({route}) => {
                           marginTop: moderateScale(10),
                           flexDirection: 'row',
                         }}>
-                        <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Cancel Request"}</Text>
+                        <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Delete Request"}</Text>
                       </TouchableOpacity>
                    
 
@@ -334,7 +324,7 @@ const MechanicAcceptedScreen = ({route}) => {
                   borderRadius: 5
                 }}
               >
-                <Text>Are you sure you want to cancel the request? It can't be undone.</Text>
+                <Text>Are you sure you want to delete the request? It can't be undone.</Text>
                 <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
                   <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{
                     flex: 1,
@@ -346,7 +336,9 @@ const MechanicAcceptedScreen = ({route}) => {
                     <Text style={{ textAlign: 'center', color: '#FFF' }}>cancel</Text>
                   </TouchableOpacity>
                   {isloading? <ActivityIndicator color='#1697c7'/>:
-                   <TouchableOpacity onPress={handleCancel} style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
+                   <TouchableOpacity
+                    onPress={handleDelete}
+                    style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
                    <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
                    </TouchableOpacity>
                   }
@@ -410,4 +402,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default MechanicAcceptedScreen;
+export default ViewRequestHistory;

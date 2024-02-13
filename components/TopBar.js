@@ -14,7 +14,7 @@ const TopBar = ({navigation}) => {
        <TouchableOpacity onPress={openDrawer}>
          <Icon name="bars"
            size={40}
-           color="#1697C7" top={5} />
+           color="#1697C7"/>
        </TouchableOpacity>
      </View>
      <View style={{ flex: 3 }}></View>

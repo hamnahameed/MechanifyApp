@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert,Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -13,11 +13,16 @@ import axiosconfig from '../../axios/axios'
 import LoadingScreen from '../Main/LoadingScreen';
 import RBSheet from "react-native-raw-bottom-sheet";
 import RequestSheet from '../../components/RequestSheet';
+import SelectBox from 'react-native-multi-selectbox'
+import { xorBy } from 'lodash'
+import { OPTIONS } from '../Mechanic/ServicesOptions';
+
 
 const FindMechanicScreen = ({ navigation }) => {
   const myContext = useContext(AppContext)
   const refRBSheet = useRef();
   const [selectedMechanic, setSelectedMechanic] = useState(null)
+  const [selectedService, setSelectedService] = useState([])
   // current Location
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
@@ -62,7 +67,8 @@ const FindMechanicScreen = ({ navigation }) => {
         const obj = {
           coordinates: {
             latitude: myContext.latitude,
-            longitude: myContext.longitude
+            longitude: myContext.longitude,
+            services:selectedService,
           }
         }
         const token = await getTokenFromStorage();
@@ -84,7 +90,11 @@ const FindMechanicScreen = ({ navigation }) => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedService,myContext.address]);
+
+  function onMultiChange() {
+    return (item) => setSelectedService(xorBy(selectedService, [item], 'id'))
+  }
 
 
   return (
@@ -97,30 +107,25 @@ const FindMechanicScreen = ({ navigation }) => {
               <Icon name='map-marker' size={20} color='#1697c7' />
               <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
             </TouchableOpacity>
-            {/* {initialRegion && (
-<MapView style={styles.map} initialRegion={initialRegion} >
-{currentLocation && (
- <Marker
-   
-   coordinate={{
-     latitude: currentLocation.latitude,
-     longitude: currentLocation.longitude,
-   }}
-   tracksViewChanges={true}
-   title="Your Location"
- />
- 
-)}
-</MapView>
+            <View style={{justifyContent: 'center',margin:moderateScale(10) }}>
+              <Text style={{ color: "#1697c7" }}>Services</Text>
 
-          )}
+              <SelectBox
+                labelStyle={{ display: 'none' }}
+                arrowIconColor="#1697c7"
+                searchIconColor="#1697c7"
+                toggleIconColor="#1697c7"
+                multiOptionContainerStyle={{ backgroundColor: '#1697c7' }}
+                options={OPTIONS}
+                selectedValues={selectedService}
+                onMultiSelect={onMultiChange()}
+                onTapClose={onMultiChange()}
+                isMulti
+                listOptionProps={{ nestedScrollEnabled: true }}
+                fixedHeight={true}
 
-        <View style={{position:'absolute',top:200,left:100}}>
-<TouchableOpacity onPress={handleMarkerPress}>
-<Icon name='map-marker' size={70} color='#1697c7'  />
-<Text>Mechanic name</Text>
-</TouchableOpacity>
-        </View> */}
+              />
+            </View>
 
             <Text style={{
               marginLeft: 30,
@@ -161,7 +166,8 @@ const FindMechanicScreen = ({ navigation }) => {
                     </View>
                     <Text style={styles.button} onPress={() => {
                       setSelectedMechanic(item)
-                      refRBSheet.current.open()}} >Request Service</Text>
+                      refRBSheet.current.open()
+                    }} >Request Service</Text>
                   </View>
 
 
@@ -173,8 +179,8 @@ const FindMechanicScreen = ({ navigation }) => {
           </View>
 
           <RBSheet
-          animationType='fade'
-          height={Dimensions.get('window').height * 0.5}
+            animationType='fade'
+            height={Dimensions.get('window').height * 0.7}
             ref={refRBSheet}
             closeOnDragDown={true}
             closeOnPressMask={false}
@@ -187,7 +193,7 @@ const FindMechanicScreen = ({ navigation }) => {
               }
             }}
           >
-            <RequestSheet navigation={navigation} mechanic={selectedMechanic}/>
+            <RequestSheet navigation={navigation} mechanic={selectedMechanic} />
           </RBSheet>
 
         </SafeAreaView>

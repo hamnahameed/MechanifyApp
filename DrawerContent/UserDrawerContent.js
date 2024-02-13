@@ -59,15 +59,21 @@ const UserDrawerContent = ({ navigation ,username}) => {
     
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('')}>
+        onPress={() => navigation.navigate('LocationType')}>
         <Icon name="map-marker" size={23} color={'#1697C7'}/>
         <Text style={{ marginLeft: 10 }}>Location Management</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
-        onPress={() => navigation.navigate('MechanicAcceptedScreen')}>
+        onPress={() => navigation.navigate('FindMechanicScreen')}>
+        <MaterialCommunityIcons name="tools" size={23} color={'#1697C7'}/>
+        <Text style={{ marginLeft: 10 }}>Find mechanic</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}
+        onPress={() => navigation.navigate('ActiveRequests')}>
         <MaterialCommunityIcons name="list-status" size={20} color={'#1697C7'}/>
-        <Text style={{ marginLeft: 10 }}>Request Status</Text>
+        <Text style={{ marginLeft: 10 }}>Active Requests</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}

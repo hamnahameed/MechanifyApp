@@ -17,7 +17,7 @@ const LogoutModal = () => {
 
   // Function to handle logout
   const handleLogout = async () => {
-    console.log("logout");
+    // console.log("logout");
     
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('user');

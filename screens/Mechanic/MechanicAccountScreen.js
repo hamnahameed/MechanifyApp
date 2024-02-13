@@ -31,6 +31,8 @@ import { OPTIONS } from './ServicesOptions';
 
 
 
+
+
 const MechanicAccountScreen = ({ route }) => {
     console.log(route.params);
     const navigation = useNavigation();
@@ -104,7 +106,7 @@ const MechanicAccountScreen = ({ route }) => {
             });
 
             Alert.alert(response?.data?.message)
-            myContext.setUserRefresh(myContext.userRefresh)
+            myContext.setUserRefresh(!myContext.userRefresh)
             navigation.navigate('MechanicHomeScreen');
 
         } catch (error) {

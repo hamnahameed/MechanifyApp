@@ -1,172 +1,359 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet,ScrollView,Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
-import {useNavigation} from '@react-navigation/native'
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions,ActivityIndicator } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import * as Location from 'expo-location';
+import TopBar from '../../components/TopBar';
+import AppContext from '../../Provider/AppContext';
+import { moderateScale } from 'react-native-size-matters';
+import { getTokenFromStorage, getUserFromStorage } from '../../authUtils/authUtils';
+import axios from 'axios';
+import axiosconfig from '../../axios/axios'
+import LoadingScreen from '../Main/LoadingScreen';
+import Modal from "react-native-modal";
 
 
 
-const ServiceRequestsScreen = () => {
-  const navigation = useNavigation();
-  // Dummy service request data
-  const dummyRequests = [
-    { id: 1, serviceType: 'Oil Change', location: '123 Main St' },
-    { id: 2, serviceType: 'Tire Rotation', location: '456 Elm St' },
-    { id: 3, serviceType: 'Brake Repair', location: '789 Oak St' },
-  ];
+const ServiceRequests = ({ navigation }) => {
+  const myContext = useContext(AppContext)
+  const [loading, setLoading] = useState(false)
+  const [requests, setRequests] = useState([])
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isloading, setloading] = useState(false)
+  const [requestId, setRequestId] = useState(null)
 
-  const [requests, setRequests] = useState(dummyRequests);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  const handleAccept = (requestId) => {
-    // Implement logic to accept the request (in-memory update for this example).
-    const updatedRequests = requests.map((request) => {
-      if (request.id === requestId) {
-        return { ...request, status: 'Accepted' };
+        const token = await getTokenFromStorage();
+        const user = await getUserFromStorage();
+        const response = await axiosconfig.get(`/allRequests/65c89eed834315128ccc505a`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response?.data?.data, "res");
+        const filteredRequests = response?.data?.data.filter(
+          (request) => request.currentStatus === "pending" || request.currentStatus === "inprogress"
+        );
+        console.log(filteredRequests, "filtered");
+        setRequests(filteredRequests)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          Alert.alert(error.response?.data?.message || "An Error Occured")
+        }
+      } finally {
+        setLoading(false);
       }
-      return request;
+    };
+
+    fetchData();
+  }, [myContext.requestRefresh]);
+  function formatDateTime(dateTimeString) {
+    const dateTime = new Date(dateTimeString);
+
+    // Format date as dd-mm-yyyy
+    const formattedDate = dateTime.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
-    setRequests(updatedRequests);
-    
-    navigation.navigate('AcceptedRequestScreen');
-  
-  };
 
-  const handleDecline = (requestId) => {
-    // Implement logic to decline the request (in-memory update for this example).
-    const updatedRequests = requests.map((request) => {
-      if (request.id === requestId) {
-        return { ...request, status: 'Declined' };
-      }
-      return request;
+    // Format time as 12-hour clock with AM/PM
+    const formattedTime = dateTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
     });
-    setRequests(updatedRequests);
-  };
+
+    return {
+      date: formattedDate,
+      time: formattedTime,
+    };
+  }
+
   
-  const openDrawer = () => {
-    navigation.openDrawer();
-};
-
-
-
-  return (
-    <View style={styles.container}>
  
-            <View style={{flexDirection: 'row',alignItems: 'center',paddingHorizontal: 40,top: 30}}>
-              <TouchableOpacity onPress={openDrawer}>
-                  <Icon name="bars" size={30} color="#1697C7" top={5} left={-10} />
-              </TouchableOpacity>
+  const handleCancel = async () => {
+    try {
 
-      {/* logo */}
-        <Image style={{width: 200,height: 150,position: 'absolute',left: 230,top: -40}}
-                source={require('../../assets/logo2.png')}/>
+      setloading(true);
+      const obj = {
+        currentStatus: 'cancelledbyuser'
+      }
+      console.log(obj, "obj to send");
 
-    </View>
-  <View style={styles.background}></View>
-        
-        <Text style={styles.heading}>Service Requests</Text>
-      
-      <FlatList
-          data={requests}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-          <ScrollView>
-          <View style={styles.requestContainer}>
-            <Text style={styles.serviceType}> {item.serviceType}</Text>
-            <Text style={styles.location}>Location: {item.location}</Text>
-            {item.status ? (
-              <Text style={styles.status}>Status: {item.status}</Text>
-            ) : (
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: '#4F7942' ,}]}
-                  onPress={() => handleAccept(item.id)}
-                >
-                  <Text style={styles.buttonText}>Accept</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: '#C0C0C0' ,marginLeft:10}]}
-                  onPress={() => handleDecline(item.id)}
-                >
-                  <Text style={[styles.buttonText ,{color:'red'}] }>Decline</Text>
-                </TouchableOpacity>
-              </View>
-             
-            )}
-            
-          </View>
-          
-          </ScrollView>
+      const token = await getTokenFromStorage();
+      const response = await axiosconfig.put(`/updateRequest/${requestId}`, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        )}
-      />
-      
-    </View>
+      Alert.alert(response?.data?.message)
+      myContext.setRequestRefresh(!myContext.requestRefresh)
+      setModalVisible(!isModalVisible)
+      navigation.navigate('UserHomeScreen');
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        Alert.alert(error.response?.data?.message || "An Error Occured")
+        console.log(error);
+      }
+    } finally {
+      setloading(false);
+    }
+  }
   
-  );
-};
+  return (
+    <>
+      {loading ? <LoadingScreen /> :
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <TopBar navigation={navigation} />
+            {/* <TouchableOpacity onPress={() => navigation.navigate('LocationType')} style={styles.location}>
+              <Icon name='map-marker' size={20} color='#1697c7' />
+              <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
+            </TouchableOpacity> */}
+
+
+            <Text style={{
+              marginLeft: 30,
+              marginTop: 10,
+              fontSize: 25,
+              color: '#1697c7', fontWeight: 'bold'
+            }}>Active Requests</Text>
+
+
+            {requests.length == 0 ? <View style={{alignItems:'center',flex:1,justifyContent:'center'}}><Text>No Data Avalaible</Text></View>:
+             <FlatList
+             data={requests}
+             keyExtractor={(item, ind) => ind.toString()}
+             renderItem={({ item }) => (
+               <View style={{
+                 borderRadius: 10,
+                 backgroundColor: '#1697c7',
+                 margin: moderateScale(10)
+               }}>
+                 <View style={{ flexDirection: 'row' }}>
+                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Requestor:</Text></View>
+                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.requestorName}</Text></View>
+                 </View>
+                 <View style={{ flexDirection: 'row' }}>
+                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Date & Time:</Text></View>
+                   <View style={styles.dateTimeView}><Text style={styles.dateTime}> {formatDateTime(item.createdAt).date}  {formatDateTime(item.createdAt).time}</Text></View>
+                 </View>
+
+                 {Array.isArray(item.services) && item.services.length > 0 &&
+                   <View style={{ flexDirection: 'row' }}>
+                     <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Services: </Text></View>
+                     <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.services.map(obj => obj['item']).join(', ')}</Text></View>
+                   </View>
+
+                 }
+                 <View style={{ flexDirection: 'row' }}>
+                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Location:</Text></View>
+                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.location}</Text></View>
+                 </View>
+
+                 <View style={{flexDirection:'row',marginVertical:moderateScale(5),justifyContent:'center'}}>
+                   <TouchableOpacity
+                     onPress={()=>navigation.navigate("MechanicAcceptedScreen",{id:item._id})}
+                     style={{
+                       backgroundColor: '#000',
+                       padding: moderateScale(10),
+                       flex:1,
+                       borderRadius: 10,
+                       justifyContent: 'center',
+                       marginTop: moderateScale(10),
+                      
+                       marginHorizontal:moderateScale(5)
+                     }}>
+                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"View"}</Text>
+                   </TouchableOpacity>
+                   <TouchableOpacity
+                     onPress={()=>{
+                       setModalVisible(!isModalVisible)
+                       setRequestId(item._id)
+                     }}
+                     style={{
+                       backgroundColor: '#000',
+                       padding: moderateScale(10),
+                       flex:1,
+                       borderRadius: 10,
+                       justifyContent: 'center',
+                       marginTop: moderateScale(10),
+                      
+                       marginHorizontal:moderateScale(5)
+                     }}>
+                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Accept"}</Text>
+                   </TouchableOpacity>
+                   <TouchableOpacity
+                     onPress={()=>{
+                       setModalVisible(!isModalVisible)
+                       setRequestId(item._id)
+                     }}
+                     style={{
+                       backgroundColor: '#000',
+                       padding: moderateScale(10),
+                       flex:1,
+                       borderRadius: 10,
+                       justifyContent: 'center',
+                       marginTop: moderateScale(10),
+                      
+                       marginHorizontal:moderateScale(5)
+                     }}>
+                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Reject"}</Text>
+                   </TouchableOpacity>
+                 </View>
+                 </View>
+
+
+             )}
+           />
+            }
+           
+
+          </View>
+
+          <Modal isVisible={isModalVisible}
+              onRequestClose={() => {
+                setModalVisible(!isModalVisible);
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: 5,
+                  backgroundColor: 'white',
+                  padding: moderateScale(20),
+                  overflow: 'hidden',
+                  borderRadius: 5
+                }}
+              >
+                <Text>Are you sure you want to cancel the request? It can't be undone.</Text>
+                <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
+                  <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{
+                    flex: 1,
+                    backgroundColor: '#1697c7',
+                    padding: moderateScale(5),
+                    borderRadius: 5,
+                    marginHorizontal: moderateScale(5)
+                  }}>
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>cancel</Text>
+                  </TouchableOpacity>
+                  {isloading? <ActivityIndicator color='#1697c7'/>:
+                   <TouchableOpacity
+                    onPress={handleCancel}
+                    style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
+                   <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
+                   </TouchableOpacity>
+                  }
+                 
+                </View>
+              </View>
+            </Modal>
+
+        </SafeAreaView>
+
+
+      }
+    </>
+  )
+}
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-      backgroundColor: '#fff',
-    },
-    background: {
-      position: 'absolute',
-      top: 100,
-      left: 0,
-      width: '120%',
-      height: '15%',
-      backgroundColor: '#1697C7', // Set your preferred color
+  container: {
+    flex: 1,
+    marginTop: moderateScale(20)
   },
-  logoContainer: {
-    alignItems: 'right',
-    marginVertical: 20
+  dateTime: {
+    fontSize: 15,
+    color: '#000'
   },
-    heading: {
-      fontSize: 30,
-      fontWeight: 'bold',
-      marginBottom: 16,
-      marginTop: 70,
-      letterSpacing:2,
-      marginLeft:20
-    },
-    requestContainer: {
-      backgroundColor: '#f5f5f5',
-      padding: 16,
-      marginBottom: 16,
-      borderRadius: 8,
-      marginTop: 60,
-    },
-    serviceType: {
-      fontSize: 18,
-      marginBottom: 8,
-    },
-    location: {
-      fontSize: 16,
-      marginBottom: 12,
-    },
-    status: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: 'green',
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginTop: 8,
-      
-    },
-    button: {
-      flex: 1,
-      padding: 8,
-      borderRadius: 4,
-      alignItems: 'center',
-    },
-    buttonText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      
-    },
-  });
+  dateTimeView: {
+    flex: 2,
+    paddingHorizontal: moderateScale(10),
+    paddingVertical: moderateScale(4)
+  },
+  location: {
+    backgroundColor: 'whitesmoke',
+    // borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    marginHorizontal: moderateScale(10),
+    padding: moderateScale(10),
+    marginTop: moderateScale(10)
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 50,
+    marginHorizontal: 20,
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 8,
+    zIndex: 1,
+  },
+  textInput: {
+    flex: 1,
+    marginLeft: 0,
+    borderWidth: 1,
+    borderColor: '#1697c7',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  card: {
+    backgroundColor: 'white',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
+  mechanicName: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  distance: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  button: {
+    backgroundColor: '#1697c7',
+    paddingVertical: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center',
+    width: 200,
+    borderRadius: 10,
+    fontSize: 15,
+    color: '#fff',
+    marginTop: 20
 
-export default ServiceRequestsScreen;
+  },
+
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+  },
+  infoColumn: {
+    flexDirection: 'row',
+  },
+  infoLabel: {
+    fontWeight: 'bold',
+    marginRight: 5,
+  },
+  infoValue: {
+    marginRight: 10,
+  },
+});
+
+
+export default ServiceRequests

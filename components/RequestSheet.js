@@ -24,7 +24,10 @@ const RequestSheet = ({ mechanic, navigation }) => {
             const obj = {
                requestor:user._id,
                services:selectedService,
-               mechanic:_id
+               mechanic:_id,
+               location:myContext.address,
+               requestorName:user.username,
+               mechanicName:username,
             }
             console.log(obj,"obj to send");
 

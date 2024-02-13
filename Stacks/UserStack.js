@@ -14,6 +14,8 @@ import MechanicAcceptedScreen from '../screens/User/MechanicAcceptedScreen';
 import SettingScreen from '../screens/Main/SettingScreen';
 import LogoutModal from '../screens/Main/LogoutModal';
 import RequestHistory from '../screens/User/RequestHistory';
+import ViewRequestHistory from '../screens/User/ViewRequestHistory';
+import ActiveRequests from '../screens/User/ActiveRequests';
 
 
 const Drawer = createDrawerNavigator();
@@ -30,8 +32,10 @@ const UserStack = () => {
           <Drawer.Screen name='MapViewScreen' component={MapViewScreen} options={{headerShown:false}} />
           <Drawer.Screen name='ServiceSelectionScreen' component={ServiceSelectionScreen} options={{headerShown:false}} />
           <Drawer.Screen name='FindMechanicScreen' component={FindMechanicScreen} options={{headerShown:false}} />
+          <Drawer.Screen name='ActiveRequests' component={ActiveRequests} options={{headerShown:false}} />
           <Drawer.Screen name='MechanicAcceptedScreen' component={MechanicAcceptedScreen} options={{headerShown:false}} />
           <Drawer.Screen name='RequestHistory' component={RequestHistory} options={{headerShown:false}} />
+          <Drawer.Screen name='ViewRequestHistory' component={ViewRequestHistory} options={{headerShown:false}} />
           <Drawer.Screen name='SettingScreen' component={SettingScreen} options={{headerShown:false}} />
           <Drawer.Screen name='Logout' component={LogoutModal} options={{ headerShown: false }} />
 

@@ -15,7 +15,7 @@ import Modal from "react-native-modal";
 
 
 
-const RequestHistory = ({ navigation }) => {
+const MechanicServiceHistory = ({ navigation }) => {
   const myContext = useContext(AppContext)
   const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState([])
@@ -30,7 +30,7 @@ const RequestHistory = ({ navigation }) => {
 
         const token = await getTokenFromStorage();
         const user = await getUserFromStorage();
-        const response = await axiosconfig.get(`/allRequests/${user._id}`, {
+        const response = await axiosconfig.get(`/allRequestsOfMechanics/${user._id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -146,7 +146,7 @@ const RequestHistory = ({ navigation }) => {
                     </View>
                     <View style={{ flexDirection: 'row', marginVertical: moderateScale(5), justifyContent: 'center' }}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate("ViewRequestHistory", { id: item._id })}
+                        onPress={() => navigation.navigate("ViewHistory", { id: item._id })}
                         style={{
                           backgroundColor: '#FFF',
                           padding: moderateScale(10),
@@ -315,4 +315,4 @@ color:'#FFF'
 });
 
 
-export default RequestHistory
+export default MechanicServiceHistory

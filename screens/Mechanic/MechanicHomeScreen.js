@@ -73,10 +73,7 @@ const MechanicHomeScreen = ({ navigation }) => {
             });
             // console.log(response?.data?.data.address, "res");
             setAddress(response?.data?.data?.address)
-            if(!response?.data?.data?.address){
-              Alert.alert("Please! complete your profile first..!")
-              navigation.navigate("MechanicAccountScreen")
-            }
+           
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 Alert.alert(error.response?.data?.message || "An Error Occured")
@@ -95,7 +92,7 @@ const MechanicHomeScreen = ({ navigation }) => {
         <View style={styles.container}>
 
           {/* Popup Modal */}
-          <Modal
+          {/* <Modal
             transparent={true}
             animationType="slide"
             visible={modalVisible}
@@ -115,7 +112,7 @@ const MechanicHomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-          </Modal>
+          </Modal> */}
 
 
          <TopBar navigation={navigation}/>
@@ -128,7 +125,7 @@ const MechanicHomeScreen = ({ navigation }) => {
           {loading? <ActivityIndicator color={"#1697c7"} size={'large'}/>:
            <View style={styles.location}>
            <Icon name='map-marker' size={20} color='#1697c7' />
-           <Text style={{ marginLeft: 10, fontSize: 15 }}>{address}</Text>
+           <Text style={{ marginLeft: 10, fontSize: 15 }}>{address?address:"You are Offline"}</Text>
          </View>
           }
          

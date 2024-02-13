@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions,ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -20,8 +20,10 @@ const ActiveRequests = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
   const [requests, setRequests] = useState([])
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModal, setModal] = useState(false);
   const [isloading, setloading] = useState(false)
   const [requestId, setRequestId] = useState(null)
+  const [isAccepted, setAccepted] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,12 +77,17 @@ const ActiveRequests = ({ navigation }) => {
     };
   }
 
-  
- 
+
+
   const handleCancel = async () => {
     try {
 
       setloading(true);
+      if(isAccepted){
+        Alert.alert("Accepted Requests can't be cancel..")
+        return;
+      }
+
       const obj = {
         currentStatus: 'cancelledbyuser'
       }
@@ -107,7 +114,39 @@ const ActiveRequests = ({ navigation }) => {
       setloading(false);
     }
   }
-  
+  const handleCompleted = async () => {
+    try {
+
+      setloading(true);
+      
+
+      const obj = {
+        currentStatus: 'completed'
+      }
+      console.log(obj, "obj to send");
+
+      const token = await getTokenFromStorage();
+      const response = await axiosconfig.put(`/updateRequest/${requestId}`, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      Alert.alert(response?.data?.message)
+      myContext.setRequestRefresh(!myContext.requestRefresh)
+      setModal(!isModal)
+      navigation.navigate('UserHomeScreen');
+
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        Alert.alert(error.response?.data?.message || "An Error Occured")
+        console.log(error);
+      }
+    } finally {
+      setloading(false);
+    }
+  }
+
   return (
     <>
       {loading ? <LoadingScreen /> :
@@ -128,115 +167,161 @@ const ActiveRequests = ({ navigation }) => {
             }}>Active Requests</Text>
 
 
-            {requests.length == 0 ? <View style={{alignItems:'center',flex:1,justifyContent:'center'}}><Text>No Data Avalaible</Text></View>:
-             <FlatList
-             data={requests}
-             keyExtractor={(item, ind) => ind.toString()}
-             renderItem={({ item }) => (
-               <View style={{
-                 borderRadius: 10,
-                 backgroundColor: '#1697c7',
-                 margin: moderateScale(10)
-               }}>
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Mechanic:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.mechanicName}</Text></View>
-                 </View>
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Date & Time:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}> {formatDateTime(item.createdAt).date}  {formatDateTime(item.createdAt).time}</Text></View>
-                 </View>
+            {requests.length == 0 ? <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}><Text>No Data Avalaible</Text></View> :
+              <FlatList
+                data={requests}
+                keyExtractor={(item, ind) => ind.toString()}
+                renderItem={({ item }) => (
+                  <View style={{
+                    borderRadius: 10,
+                    margin: moderateScale(10),
+                    padding: moderateScale(10),
+                    backgroundColor: '#FFF'
+                  }}>
+                    <View style={styles.dateTimeView}>
+                      <Text style={styles.dateTime}>Date & Time: {formatDateTime(item.createdAt).date}  {formatDateTime(item.createdAt).time}</Text>
+                    </View>
+                    {Array.isArray(item.services) && item.services.length > 0 &&
+                      <View style={styles.dateTimeView}><Text style={styles.dateTime}>Services: {item.services.map(obj => obj['item']).join(', ')}</Text></View>}
+                     <View>
+                      <Text style={styles.dateTime}>Status: <Text style={{color: item.currentStatus == "pending"? "red":"green"}}>{item.currentStatus}</Text></Text>
+                    </View>
+                    <View>
+                      <Text style={styles.dateTime}>Description <Text>{item.description}</Text></Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginVertical: moderateScale(5), justifyContent: 'center' }}>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("MechanicAcceptedScreen", { id: item._id })}
+                        style={{
+                          backgroundColor: '#1697c7',
+                          padding: moderateScale(10),
+                          marginHorizontal: moderateScale(30),
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          marginTop: moderateScale(10),
+                          flexDirection: 'row',
+                        }}>
+                        <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"View Request"}</Text>
+                      </TouchableOpacity>
+                      {item.isAccepted ? <TouchableOpacity
+                        onPress={() => {
+                          setModal(!isModal)
+                          setRequestId(item._id)
+                          setAccepted(item.isAccepted)
+                        }}
+                        style={{
+                          backgroundColor: '#1697c7',
+                          padding: moderateScale(10),
+                          marginHorizontal: moderateScale(30),
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          marginTop: moderateScale(10),
+                          flexDirection: 'row',
+                        }}>
+                        <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Mark Completed"}</Text>
+                      </TouchableOpacity>: <TouchableOpacity
+                        onPress={() => {
+                          setModalVisible(!isModalVisible)
+                          setRequestId(item._id)
+                          setAccepted(item.isAccepted)
+                        }}
+                        style={{
+                          backgroundColor: '#1697c7',
+                          padding: moderateScale(10),
+                          marginHorizontal: moderateScale(30),
+                          borderRadius: 10,
+                          justifyContent: 'center',
+                          marginTop: moderateScale(10),
+                          flexDirection: 'row',
+                        }}>
+                        <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Cancel Request"}</Text>
+                      </TouchableOpacity>}
+                     
+                    </View>
+                  </View>
 
-                 {Array.isArray(item.services) && item.services.length > 0 &&
-                   <View style={{ flexDirection: 'row' }}>
-                     <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Services: </Text></View>
-                     <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.services.map(obj => obj['item']).join(', ')}</Text></View>
-                   </View>
 
-                 }
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>My Location:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.location}</Text></View>
-                 </View>
-
-                 <View style={{flexDirection:'row',marginVertical:moderateScale(5),justifyContent:'center'}}>
-                   <TouchableOpacity
-                     onPress={()=>navigation.navigate("MechanicAcceptedScreen",{id:item._id})}
-                     style={{
-                       backgroundColor: '#000',
-                       padding: moderateScale(10),
-                       marginHorizontal: moderateScale(30),
-                       borderRadius: 10,
-                       justifyContent: 'center',
-                       marginTop: moderateScale(10),
-                       flexDirection: 'row',
-                     }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"View Request"}</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity
-                     onPress={()=>{
-                       setModalVisible(!isModalVisible)
-                       setRequestId(item._id)
-                     }}
-                     style={{
-                       backgroundColor: '#000',
-                       padding: moderateScale(10),
-                       marginHorizontal: moderateScale(30),
-                       borderRadius: 10,
-                       justifyContent: 'center',
-                       marginTop: moderateScale(10),
-                       flexDirection: 'row',
-                     }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Cancel Request"}</Text>
-                   </TouchableOpacity>
-                 </View>
-                 </View>
-
-
-             )}
-           />
+                )}
+              />
             }
-           
+
 
           </View>
 
           <Modal isVisible={isModalVisible}
-              onRequestClose={() => {
-                setModalVisible(!isModalVisible);
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginHorizontal: 5,
-                  backgroundColor: 'white',
-                  padding: moderateScale(20),
-                  overflow: 'hidden',
-                  borderRadius: 5
-                }}
-              >
-                <Text>Are you sure you want to cancel the request? It can't be undone.</Text>
-                <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
-                  <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{
-                    flex: 1,
-                    backgroundColor: '#1697c7',
-                    padding: moderateScale(5),
-                    borderRadius: 5,
-                    marginHorizontal: moderateScale(5)
-                  }}>
-                    <Text style={{ textAlign: 'center', color: '#FFF' }}>cancel</Text>
-                  </TouchableOpacity>
-                  {isloading? <ActivityIndicator color='#1697c7'/>:
-                   <TouchableOpacity
+            onRequestClose={() => {
+              setModalVisible(!isModalVisible);
+            }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 5,
+                backgroundColor: 'white',
+                padding: moderateScale(20),
+                overflow: 'hidden',
+                borderRadius: 5
+              }}
+            >
+              <Text>Are you sure you want to cancel the request? It can't be undone.</Text>
+              <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
+                <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{
+                  flex: 1,
+                  backgroundColor: '#1697c7',
+                  padding: moderateScale(5),
+                  borderRadius: 5,
+                  marginHorizontal: moderateScale(5)
+                }}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>cancel</Text>
+                </TouchableOpacity>
+                {isloading ? <ActivityIndicator color='#1697c7' /> :
+                  <TouchableOpacity
                     onPress={handleCancel}
                     style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
-                   <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
-                   </TouchableOpacity>
-                  }
-                 
-                </View>
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
+                  </TouchableOpacity>
+                }
+
               </View>
-            </Modal>
+            </View>
+          </Modal>
+          <Modal isVisible={isModal}
+            onRequestClose={() => {
+              setModal(!isModal);
+            }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 5,
+                backgroundColor: 'white',
+                padding: moderateScale(20),
+                overflow: 'hidden',
+                borderRadius: 5
+              }}
+            >
+              <Text>Are you sure you want to mark completed the request? It can't be undone.</Text>
+              <View style={{ flexDirection: 'row', marginTop: moderateScale(10) }}>
+                <TouchableOpacity onPress={() => setModal(!isModal)} style={{
+                  flex: 1,
+                  backgroundColor: '#1697c7',
+                  padding: moderateScale(5),
+                  borderRadius: 5,
+                  marginHorizontal: moderateScale(5)
+                }}>
+                  <Text style={{ textAlign: 'center', color: '#FFF' }}>cancel</Text>
+                </TouchableOpacity>
+                {isloading ? <ActivityIndicator color='#1697c7' /> :
+                  <TouchableOpacity
+                    onPress={handleCompleted}
+                    style={{ flex: 1, backgroundColor: '#1697c7', padding: moderateScale(5), borderRadius: 5, marginHorizontal: moderateScale(5) }}>
+                    <Text style={{ textAlign: 'center', color: '#FFF' }}>yes</Text>
+                  </TouchableOpacity>
+                }
+
+              </View>
+            </View>
+          </Modal>
 
         </SafeAreaView>
 
@@ -251,14 +336,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: moderateScale(20)
   },
-  dateTime: {
-    fontSize: 15,
-    color: '#000'
-  },
-  dateTimeView: {
-    flex: 2,
-    padding: moderateScale(10)
-  },
+
+
   location: {
     backgroundColor: 'whitesmoke',
     // borderWidth: 1,

@@ -128,7 +128,9 @@ const MechanicAccountScreen = ({ route }) => {
     return (
         <>
 
-            {loading ? <LoadingScreen /> :
+            {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
                 <SafeAreaView style={{ flex: 1 }}>
 
                     <View style={styles.container}>
@@ -192,35 +194,7 @@ const MechanicAccountScreen = ({ route }) => {
                                         <TextInput style={{ fontSize: 18 }} value={phone} onChangeText={(e) => setPhone(e)} />
                                     </View>
                                 </View>
-                                {/* <View style={styles.field}>
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Icon name={'lock'} size={30} color="#000" style={styles.icon} />
-                            </View>
-
-                            <View style={{ flex: 3, justifyContent: 'center' }}>
-                                <Text style={{ color: '#1697c7' }}>{'Password'}</Text>
-                                <TextInput style={{ fontSize: 18 }} value={pwd} onChangeText={(e)=>setPwd(e)}secureTextEntry={true} />
-                            </View>
-                        </View> */}
-                                {/* <View style={styles.field}>
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <Icon name={'gender-male-female'} size={30} color="#000" style={styles.icon} />
-                            </View>
-
-                            <View style={{ flex: 3, justifyContent: 'center' }}>
-                                <Text style={{ color: "#1697c7" }}>Gender</Text>
-                                <View style={styles.radioButtons}>
-                                    <View style={styles.radioButton}>
-                                        <Text style={{ fontSize: 18 }}>Male</Text>
-                                        <CheckBox checked={gender === 'male'} onPress={() => setGender('male')} />
-                                    </View>
-                                    <View style={styles.radioButton}>
-                                        <Text style={{ fontSize: 18 }}>Female</Text>
-                                        <CheckBox checked={gender === 'female'} onPress={() => setGender('female')} />
-                                    </View>
-                                </View>
-                            </View>
-                        </View> */}
+                              
                         
                                 
                                 <View style={styles.field}>

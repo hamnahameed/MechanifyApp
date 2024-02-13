@@ -14,6 +14,8 @@ import SettingScreen from '../screens/Main/SettingScreen';
 import LogoutModal from '../screens/Main/LogoutModal';
 import MechanicMapViewScreen from '../screens/Mechanic/MechanicMapViewScreen';
 import MechanicLocationScreen from '../screens/Mechanic/MechanicLocationScreen';
+import MechanicServiceHistory from '../screens/Mechanic/MechanicServiceHistory';
+import ViewHistory from '../screens/Mechanic/ViewHistory';
 
 const Drawer = createDrawerNavigator();
 
@@ -29,6 +31,8 @@ const MechanicStack = () => {
            <Drawer.Screen name='MechanicProfile' component={MechanicProfile} options={{headerShown:false}} />
            <Drawer.Screen name='MechanicLocationScreen' component={MechanicLocationScreen} options={{headerShown:false}} />
            <Drawer.Screen name='ServiceRequestsScreen' component={ServiceRequestsScreen} options={{headerShown:false}} />
+           <Drawer.Screen name='MechanicServiceHistory' component={MechanicServiceHistory} options={{headerShown:false}} />
+           <Drawer.Screen name='ViewHistory' component={ViewHistory} options={{headerShown:false}} />
            <Drawer.Screen name='AcceptedRequestScreen' component={AcceptedRequestScreen} options={{headerShown:false}} />
            <Drawer.Screen name='BottomSheetExample' component={BottomSheetExample} options={{headerShown:false}} />
            <Drawer.Screen name='SettingScreen' component={SettingScreen} options={{headerShown:false}} />

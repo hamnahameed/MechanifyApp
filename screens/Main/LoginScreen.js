@@ -88,12 +88,12 @@ const LoginScreen = ({ navigation }) => {
                 <View style={styles.formContainer}>
                     <Text style={styles.welcome}>Welcome Back!</Text>
                     <ScrollView>
-                        <Text style={styles.placeholder}>Username</Text>
+                        <Text style={styles.placeholder}>Email</Text>
                         <View style={styles.inputContainer}>
                             <Image source={require('../../assets/userIcon.png')}
                                 style={styles.inputIcon} />
                             <TextInput style={styles.input}
-                                placeholder="username"
+                                placeholder="email"
                                 placeholderTextColor="black"
                                 onChangeText={
                                     (text) => setEmail(text)

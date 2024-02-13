@@ -225,10 +225,10 @@ console.log(route.params);
                       flexDirection: 'row',
                     }}>
                       <View style={{ flex: 1, padding: moderateScale(5) }}>
-                        <Text style={{ color: '#FFF', fontSize: 20 }}>Status:</Text>
+                        <Text style={{ color: '#FFF', fontSize: 15 }}>Status:</Text>
                       </View>
-                      <View style={{ flex: 3, backgroundColor: request.currentStatus == "pending" ? "red" : "green", padding: moderateScale(5) }}>
-                        <Text style={{ color: '#FFF', fontSize: 20, textAlign: 'center' }}>{request.currentStatus}</Text>
+                      <View style={{ flex: 3, backgroundColor: request.currentStatus == "completed" ? "green" : "red", padding: moderateScale(5) }}>
+                        <Text style={{ color: '#FFF', fontSize: 15, textAlign: 'center' }}>{request.currentStatus}</Text>
                       </View>
                     </View>
                   </View>
@@ -269,7 +269,10 @@ console.log(route.params);
                         <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Delete Request"}</Text>
                       </TouchableOpacity>
                    
-
+                      <View style={{margin:moderateScale(10)}}>
+                      <Text style={styles.dateTime}>Description: </Text>
+                      <Text>{request.description}</Text>
+                    </View>
 
 
 

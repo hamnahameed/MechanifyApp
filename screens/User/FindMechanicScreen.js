@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, SafeAreaView, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import * as Location from 'expo-location';
 import TopBar from '../../components/TopBar';
@@ -95,11 +96,21 @@ const FindMechanicScreen = ({ navigation }) => {
   function onMultiChange() {
     return (item) => setSelectedService(xorBy(selectedService, [item], 'id'))
   }
-
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      const response = await Geocoder.from(latitude, longitude);
+      const newAddress = response.results[0].formatted_address;
+       return newAddress;
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
 
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
@@ -143,27 +154,20 @@ const FindMechanicScreen = ({ navigation }) => {
               renderItem={({ item }) => (
                 <>
                   <View style={styles.card}>
+                    <View>
                     <Text style={styles.mechanicName}>{item.username}</Text>
-                    <View style={styles.infoContainer}>
-                      <View style={styles.infoColumn}>
-                        <Text style={styles.infoLabel}>Charges:</Text>
-                        <Text style={styles.infoValue}>300</Text>
-                      </View>
-                      <View style={styles.infoColumn}>
-                        <Text style={styles.infoLabel}>Time:</Text>
-                        <Text style={styles.infoValue}>10mins</Text>
-                      </View>
                     </View>
-                    <View style={styles.infoContainer}>
-                      <View style={styles.infoColumn}>
-                        <Text style={styles.infoLabel}>Reviews:</Text>
-                        <Text style={styles.infoValue}>4.5</Text>
-                      </View>
-                      <View style={styles.infoColumn}>
-                        <Text style={styles.infoLabel}>Distance:</Text>
-                        <Text style={styles.infoValue}>{item.distance}</Text>
-                      </View>
+                    <View style={{flexDirection:'row'}}>
+                    <Icon style={{marginRight:moderateScale(5)}} name='map-marker' size={20} color='#1697c7' />
+                      <Text>{item.address}</Text>
                     </View>
+                    {Array.isArray(item.services) && item.services.length > 0 &&
+                   <View style={{flexDirection:'row'}}>
+                    <Entypo style={{marginRight:moderateScale(5)}} name='tools' size={20} color='#1697c7' />
+                    <Text>{item.services.map(obj => obj['item']).join(', ')}</Text>
+                    </View>
+                   }
+                     
                     <Text style={styles.button} onPress={() => {
                       setSelectedMechanic(item)
                       refRBSheet.current.open()

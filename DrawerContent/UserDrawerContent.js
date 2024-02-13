@@ -4,22 +4,23 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the 
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import LogoutModal from '../screens/Main/LogoutModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { getUserFromStorage } from '../authUtils/authUtils';
 
 
 
-const UserDrawerContent = ({ navigation ,username}) => {
+const UserDrawerContent = ({ navigation}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
-  
-  // Function to handle logout
-  const handleLogout = async () => {
-    // Implement your logout logic here
-    // For example, you can clear user data, reset authentication, etc.
-    // Then, close the modal and navigate to the login screen
-    setModalVisible(false);
-   
-    // Implement your navigation logic here
-  };
+  const [user, setUser] = useState({})
+  React.useEffect(() => {
+    const fetchToken = async () => {
+      const getUser = await getUserFromStorage();
+      setUser(getUser)
+
+    };
+
+    fetchToken();
+  }, []);
   return (
     
     <View style={{ flex: 1 }}>
@@ -38,7 +39,7 @@ const UserDrawerContent = ({ navigation ,username}) => {
         <View style={styles.userIconContainer}>
           <Icon name="user" size={40} color="black" />
         </View>
-        <Text style={styles.userName}>John Doe</Text>
+        <Text style={styles.userName}>{user.username}</Text>
       </View>
 
       {/* Drawer Items */}

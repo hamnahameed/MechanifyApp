@@ -30,7 +30,7 @@ const ServiceRequests = ({ navigation }) => {
 
         const token = await getTokenFromStorage();
         const user = await getUserFromStorage();
-        const response = await axiosconfig.get(`/allRequests/65c89eed834315128ccc505a`, {
+        const response = await axiosconfig.get(`/allRequestsOfMechanics/${user._id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -110,17 +110,13 @@ const ServiceRequests = ({ navigation }) => {
   
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
-            {/* <TouchableOpacity onPress={() => navigation.navigate('LocationType')} style={styles.location}>
-              <Icon name='map-marker' size={20} color='#1697c7' />
-              <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
-            </TouchableOpacity> */}
-
-
-            <Text style={{
+           <Text style={{
               marginLeft: 30,
               marginTop: 10,
               fontSize: 25,
@@ -133,83 +129,40 @@ const ServiceRequests = ({ navigation }) => {
              data={requests}
              keyExtractor={(item, ind) => ind.toString()}
              renderItem={({ item }) => (
-               <View style={{
-                 borderRadius: 10,
-                 backgroundColor: '#1697c7',
-                 margin: moderateScale(10)
-               }}>
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Requestor:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.requestorName}</Text></View>
-                 </View>
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Date & Time:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}> {formatDateTime(item.createdAt).date}  {formatDateTime(item.createdAt).time}</Text></View>
-                 </View>
-
-                 {Array.isArray(item.services) && item.services.length > 0 &&
-                   <View style={{ flexDirection: 'row' }}>
-                     <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Services: </Text></View>
-                     <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.services.map(obj => obj['item']).join(', ')}</Text></View>
-                   </View>
-
-                 }
-                 <View style={{ flexDirection: 'row' }}>
-                   <View style={[styles.dateTimeView, { flex: 1 }]}><Text style={styles.dateTime}>Location:</Text></View>
-                   <View style={styles.dateTimeView}><Text style={styles.dateTime}>{item.location}</Text></View>
-                 </View>
-
-                 <View style={{flexDirection:'row',marginVertical:moderateScale(5),justifyContent:'center'}}>
-                   <TouchableOpacity
-                     onPress={()=>navigation.navigate("MechanicAcceptedScreen",{id:item._id})}
-                     style={{
-                       backgroundColor: '#000',
-                       padding: moderateScale(10),
-                       flex:1,
-                       borderRadius: 10,
-                       justifyContent: 'center',
-                       marginTop: moderateScale(10),
-                      
-                       marginHorizontal:moderateScale(5)
-                     }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"View"}</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity
-                     onPress={()=>{
-                       setModalVisible(!isModalVisible)
-                       setRequestId(item._id)
-                     }}
-                     style={{
-                       backgroundColor: '#000',
-                       padding: moderateScale(10),
-                       flex:1,
-                       borderRadius: 10,
-                       justifyContent: 'center',
-                       marginTop: moderateScale(10),
-                      
-                       marginHorizontal:moderateScale(5)
-                     }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Accept"}</Text>
-                   </TouchableOpacity>
-                   <TouchableOpacity
-                     onPress={()=>{
-                       setModalVisible(!isModalVisible)
-                       setRequestId(item._id)
-                     }}
-                     style={{
-                       backgroundColor: '#000',
-                       padding: moderateScale(10),
-                       flex:1,
-                       borderRadius: 10,
-                       justifyContent: 'center',
-                       marginTop: moderateScale(10),
-                      
-                       marginHorizontal:moderateScale(5)
-                     }}>
-                     <Text style={{ color: "#1697c7", textAlign: 'center', fontSize: 15 }}>{"Reject"}</Text>
-                   </TouchableOpacity>
-                 </View>
-                 </View>
+              <View style={{
+                borderRadius: 10,
+                margin: moderateScale(10),
+                padding: moderateScale(10),
+                backgroundColor: '#FFF'
+              }}>
+                <View>
+                  <Text style={styles.dateTime}>Date & Time: {formatDateTime(item.createdAt).date}  {formatDateTime(item.createdAt).time}</Text>
+                </View>
+                {Array.isArray(item.services) && item.services.length > 0 &&
+                  <View ><Text style={styles.dateTime}>Services: {item.services.map(obj => obj['item']).join(', ')}</Text></View>}
+                 <View>
+                  <Text style={styles.dateTime}>Status: <Text style={{color: item.currentStatus == "pending"? "red":"green"}}>{item.currentStatus}</Text></Text>
+                </View>
+                <View>
+                  <Text style={styles.dateTime}>Description <Text>{item.description}</Text></Text>
+                </View>
+                <View style={{ flexDirection: 'row', marginVertical: moderateScale(5), justifyContent: 'center' }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("AcceptedRequestScreen", { id: item._id })}
+                    style={{
+                      backgroundColor: '#1697c7',
+                      padding: moderateScale(10),
+                      marginHorizontal: moderateScale(30),
+                      borderRadius: 10,
+                      justifyContent: 'center',
+                      marginTop: moderateScale(10),
+                      flexDirection: 'row',
+                    }}>
+                    <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"View Request"}</Text>
+                  </TouchableOpacity>
+                 
+                </View>
+              </View>
 
 
              )}

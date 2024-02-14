@@ -1,6 +1,6 @@
 //import liraries
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import { useNavigation, useRoute } from '@react-navigation/native'
 import MapView, { Marker } from 'react-native-maps';
@@ -10,10 +10,13 @@ import TopBar from '../../components/TopBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import { moderateScale } from 'react-native-size-matters';
 import Geocoder from 'react-native-geocoding';
-
-
+import axios from 'axios';
+import axiosconfig from '../../axios/axios'
+import { ActivityIndicator } from 'react-native';
+import { getTokenFromStorage, getUserFromStorage } from '../../authUtils/authUtils';
 // create a component
 const UserHomeScreen = () => {
+  const [isloading, setloading] = useState(false)
   const navigation = useNavigation();
   const myContext = useContext(AppContext)
 
@@ -52,6 +55,40 @@ const UserHomeScreen = () => {
       console.error("Error fetching address:", error);
     }
   };
+  useEffect(()=>{
+    const userUpdate = async ()=>{
+      try {
+        setloading(true);
+        const user = await getUserFromStorage();
+        getAddressFromCoordinates(myContext.latitude,myContext.longitude)
+        const obj = {
+          latitude: myContext.latitude,
+          longitude: myContext.longitude,
+          address:myContext.address,
+          username:user.username,
+        }
+        console.log(obj, "obj to send");
+  
+        const token = await getTokenFromStorage();
+        const response = await axiosconfig.put('/auth/updateuser', obj, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Alert.alert(response?.data?.message)
+        myContext.setUserRefresh(!myContext.userRefresh)
+       } catch (error) {
+        if (axios.isAxiosError(error)) {
+          Alert.alert(error.response?.data?.message || "An Error Occured")
+          console.log(error);
+        }
+      } finally {
+        setloading(false);
+      }
+    }
+    userUpdate();
+  },[])
 
 
 
@@ -94,10 +131,13 @@ const UserHomeScreen = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TopBar navigation={navigation} />
-        <TouchableOpacity onPress={handleLocationInputPress} style={styles.location}>
-          <Icon name='map-marker' size={20} color='#1697c7' />
-          <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
-        </TouchableOpacity>
+        {isloading? <ActivityIndicator color={'#1697c7'}/>: 
+         <TouchableOpacity onPress={handleLocationInputPress} style={styles.location}>
+         <Icon name='map-marker' size={20} color='#1697c7' />
+         <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
+       </TouchableOpacity>
+        }
+       
         <ScrollView>
 
 

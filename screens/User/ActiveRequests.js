@@ -10,7 +10,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { getTokenFromStorage, getUserFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
-import LoadingScreen from '../Main/LoadingScreen';
+
 import Modal from "react-native-modal";
 
 
@@ -149,7 +149,9 @@ const ActiveRequests = ({ navigation }) => {
 
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />

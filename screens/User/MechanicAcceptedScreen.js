@@ -10,7 +10,6 @@ import axios from 'axios';
 import axiosconfig from '../../axios/axios'
 import TopBar from '../../components/TopBar';
 import { moderateScale } from 'react-native-size-matters';
-import LoadingScreen from '../Main/LoadingScreen';
 import { ActivityIndicator } from 'react-native-paper';
 import AppContext from '../../Provider/AppContext';
 import Modal from "react-native-modal";
@@ -181,7 +180,9 @@ const MechanicAcceptedScreen = ({route}) => {
 
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />

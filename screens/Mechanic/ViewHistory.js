@@ -10,10 +10,10 @@ import axios from 'axios';
 import axiosconfig from '../../axios/axios'
 import TopBar from '../../components/TopBar';
 import { moderateScale } from 'react-native-size-matters';
-import LoadingScreen from '../Main/LoadingScreen';
 import { ActivityIndicator } from 'react-native-paper';
 import AppContext from '../../Provider/AppContext';
 import Modal from "react-native-modal";
+import Geocoder from 'react-native-geocoding';
 
 
 
@@ -26,6 +26,7 @@ console.log(route.params);
   const [request, setRequest] = useState({})
   const [requestor, setRequestor] = useState({})
   const [isModalVisible, setModalVisible] = useState(false);
+  const [address, setAddress] = useState("")
   // Handle opening WhatsApp
   const openWhatsApp = () => {
     const phoneNumber = requestor.phoneNum;
@@ -77,6 +78,15 @@ console.log(route.params);
 
     getLocation();
   }, []);
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      const response = await Geocoder.from(latitude, longitude);
+      const newAddress = response.results[0].formatted_address;
+      setAddress(newAddress);
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,11 +103,12 @@ console.log(route.params);
           setRequest(res?.data?.data?.request);
           setRequestor(res?.data?.data?.requestor);
           setInitialRegion({
-            latitude: res?.data?.data?.requestor.latitude,
-            longitude: res?.data?.data?.requestor.longitude,
+            latitude: res?.data?.data?.request.latitude,
+            longitude: res?.data?.data?.request.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           });
+          await getAddressFromCoordinates(res?.data?.data?.request.latitude,res?.data?.data?.request.longitude)
       
        
 
@@ -174,7 +185,9 @@ console.log(route.params);
 
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
@@ -273,7 +286,7 @@ console.log(route.params);
                     </View>
                     <View style={{ flex: 3, padding: moderateScale(5) }}>
                       <Text style={{ fontSize: 15, color: '#C0C0C0' }}>{requestor.username}</Text>
-                      <Text style={{ fontSize: 10, color: '#C0C0C0' }}>{requestor.address}</Text>
+                      <Text style={{ fontSize: 10, color: '#C0C0C0' }}>{address}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
                       <TouchableOpacity onPress={makePhoneCall} style={styles.phoneButton}>

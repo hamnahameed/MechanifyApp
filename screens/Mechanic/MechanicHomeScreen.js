@@ -45,22 +45,7 @@ const MechanicHomeScreen = ({ navigation }) => {
       console.error("Error fetching address:", error);
     }
   };
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [inputText, setInputText] = useState('');
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const handleSubmit = () => {
-    // Handle the submission logic here
-    console.log('Submitted:', inputText);
-
-    // After submission, close the modal
-    closeModal();
-  };
-
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -73,6 +58,10 @@ const MechanicHomeScreen = ({ navigation }) => {
             });
             // console.log(response?.data?.data.address, "res");
             setAddress(response?.data?.data?.address)
+            if(response?.data?.data?.services.length == 0){
+              Alert.alert("Please! Select your Services first")
+              navigation.navigate("MechanicAccountScreen")
+            }
            
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -85,6 +74,8 @@ const MechanicHomeScreen = ({ navigation }) => {
 
     fetchData();
 }, [myContext.userRefresh]);
+
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

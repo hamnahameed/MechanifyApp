@@ -11,12 +11,12 @@ import { moderateScale } from 'react-native-size-matters';
 import { getTokenFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
-import LoadingScreen from '../Main/LoadingScreen';
 import RBSheet from "react-native-raw-bottom-sheet";
 import RequestSheet from '../../components/RequestSheet';
 import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
 import { OPTIONS } from '../Mechanic/ServicesOptions';
+import Geocoder from 'react-native-geocoding';
 
 
 const FindMechanicScreen = ({ navigation }) => {
@@ -66,12 +66,12 @@ const FindMechanicScreen = ({ navigation }) => {
         setLoading(true);
 
         const obj = {
-          coordinates: {
-            latitude: myContext.latitude,
-            longitude: myContext.longitude,
-            services:selectedService,
-          }
+          latitude: myContext.latitude,
+          longitude: myContext.longitude,
+          services: selectedService,
         }
+        console.log(obj, "send");
+        console.log(selectedService);
         const token = await getTokenFromStorage();
         const response = await axiosconfig.post('/auth/getMechanics', obj, {
           headers: {
@@ -91,26 +91,42 @@ const FindMechanicScreen = ({ navigation }) => {
     };
 
     fetchData();
-  }, [selectedService,myContext.address]);
+  }, [selectedService, myContext.address]);
 
   function onMultiChange() {
     return (item) => setSelectedService(xorBy(selectedService, [item], 'id'))
   }
+  const [addresses, setAddresses] = useState([]);
+
   const getAddressFromCoordinates = async (latitude, longitude) => {
     try {
       const response = await Geocoder.from(latitude, longitude);
       const newAddress = response.results[0].formatted_address;
-       return newAddress;
+      return newAddress;
     } catch (error) {
       console.error("Error fetching address:", error);
+      return 'Address not available';
     }
   };
 
+  // Assuming you have a useEffect to fetch and set addresses
+  useEffect(() => {
+    // Assuming mechanics is your data array
+    const fetchAddresses = async () => {
+      const newAddresses = await Promise.all(
+        mechanics.map(async (item) => await getAddressFromCoordinates(item.latitude, item.longitude))
+      );
+      setAddresses(newAddresses);
+    };
+
+    fetchAddresses();
+  }, [mechanics]);
+
   return (
     <>
-      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                <ActivityIndicator color={"#1697c7"} size={'large'}/>
-                </View> :
+      {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color={"#1697c7"} size={'large'} />
+      </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
@@ -118,9 +134,8 @@ const FindMechanicScreen = ({ navigation }) => {
               <Icon name='map-marker' size={20} color='#1697c7' />
               <Text style={{ marginLeft: 10, fontSize: 15 }}>{myContext.address}</Text>
             </TouchableOpacity>
-            <View style={{justifyContent: 'center',margin:moderateScale(10) }}>
-              <Text style={{ color: "#1697c7" }}>Services</Text>
-
+            <View style={{ justifyContent: 'center', margin: moderateScale(10) }}>
+              <Text style={{ color: "#1697c7" }}>{'Please Select Service(s)'}</Text>
               <SelectBox
                 labelStyle={{ display: 'none' }}
                 arrowIconColor="#1697c7"
@@ -147,38 +162,43 @@ const FindMechanicScreen = ({ navigation }) => {
 
 
             {/* Mechanic list */}
-            <FlatList
+            {mechanics.length == 0 ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>No data Avalaible</Text></View>
+              :
+              <FlatList
 
-              data={mechanics}
-              keyExtractor={(item, ind) => ind.toString()}
-              renderItem={({ item }) => (
-                <>
-                  <View style={styles.card}>
-                    <View>
-                    <Text style={styles.mechanicName}>{item.username}</Text>
+                data={mechanics}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                  <>
+                    <View style={styles.card}>
+                      <View>
+                        <Text style={styles.mechanicName}>{item.username}</Text>
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Icon style={{ marginRight: moderateScale(5) }} name='map-marker' size={20} color='#1697c7' />
+                        <Text>{addresses[index]}</Text>
+                      </View>
+                      {Array.isArray(item.services) && item.services.length > 0 &&
+                        <View style={{ flexDirection: 'row' }}>
+                          <Entypo style={{ marginRight: moderateScale(5) }} name='tools' size={20} color='#1697c7' />
+                          <Text>{item.services.map(obj => obj['item']).join(', ')}</Text>
+                        </View>
+                      }
+
+                      <Text style={styles.button} onPress={() => {
+                        setSelectedMechanic(item)
+                        refRBSheet.current.open()
+                      }} >Request Service</Text>
                     </View>
-                    <View style={{flexDirection:'row'}}>
-                    <Icon style={{marginRight:moderateScale(5)}} name='map-marker' size={20} color='#1697c7' />
-                      <Text>{item.address}</Text>
-                    </View>
-                    {Array.isArray(item.services) && item.services.length > 0 &&
-                   <View style={{flexDirection:'row'}}>
-                    <Entypo style={{marginRight:moderateScale(5)}} name='tools' size={20} color='#1697c7' />
-                    <Text>{item.services.map(obj => obj['item']).join(', ')}</Text>
-                    </View>
-                   }
-                     
-                    <Text style={styles.button} onPress={() => {
-                      setSelectedMechanic(item)
-                      refRBSheet.current.open()
-                    }} >Request Service</Text>
-                  </View>
 
 
-                </>
+                  </>
 
-              )}
-            />
+                )}
+              />
+
+            }
+
 
           </View>
 

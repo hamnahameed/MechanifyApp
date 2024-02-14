@@ -10,7 +10,6 @@ import { moderateScale } from 'react-native-size-matters';
 import { getTokenFromStorage, getUserFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
-import LoadingScreen from '../Main/LoadingScreen';
 import Modal from "react-native-modal";
 
 
@@ -101,7 +100,9 @@ const MechanicServiceHistory = ({ navigation }) => {
 
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color={"#1697c7"} size={'large'} />
+      </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
@@ -136,9 +137,9 @@ const MechanicServiceHistory = ({ navigation }) => {
                     {Array.isArray(item.services) && item.services.length > 0 &&
                       <View >
                         <Text style={styles.dateTime}>Services: {item.services.map(obj => obj['item']).join(', ')}
-                      </Text></View>}
-                      <View >
-                      <Text style={styles.dateTime}>Status: <Text style={{color: item.currentStatus == "completed"? "green":"red"}}>{item.currentStatus}</Text></Text>
+                        </Text></View>}
+                    <View >
+                      <Text style={styles.dateTime}>Status: <Text style={{ color: item.currentStatus == "completed" ? "green" : "red" }}>{item.currentStatus}</Text></Text>
                     </View>
                     <View>
                       <Text style={styles.dateTime}>Description: </Text>
@@ -235,9 +236,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: moderateScale(20)
   },
-dateTime:{
-color:'#FFF'
-},
+  dateTime: {
+    color: '#FFF'
+  },
   location: {
     backgroundColor: 'whitesmoke',
     // borderWidth: 1,

@@ -15,14 +15,21 @@ import {
 // import Icon from 'react-native-vector-icons/FontAwesome'; // You can change the icon library if needed
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Iconss from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/FontAwesome';
+import { CheckBox } from 'react-native-elements';
 import AppContext from '../../Provider/AppContext';
 import { moderateScale } from 'react-native-size-matters';
 import TopBar from '../../components/TopBar';
 import { getTokenFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
-import LoadingScreen from '../Main/LoadingScreen';
+import SelectBox from 'react-native-multi-selectbox'
+
+
+
+
+
 
 const UserAccountScreen = ({ route }) => {
     console.log(route.params);
@@ -36,7 +43,7 @@ const UserAccountScreen = ({ route }) => {
     const [longitude, setLongitude] = useState(myContext.longitude);
     const [loading, setLoading] = useState(false)
     const [isloading, setloading] = useState(false)
-    
+    const [selectedService, setSelectedService] = useState([])
 
     useEffect(() => {
         if (route.params) {
@@ -97,8 +104,8 @@ const UserAccountScreen = ({ route }) => {
             });
 
             Alert.alert(response?.data?.message)
-            myContext.setUserRefresh(myContext.userRefresh)
-            navigation.navigate('UserHomeScreen');
+            myContext.setUserRefresh(!myContext.userRefresh)
+            navigation.navigate('MechanicHomeScreen');
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -110,10 +117,18 @@ const UserAccountScreen = ({ route }) => {
         }
     };
 
-   return (
+    function onMultiChange() {
+        return (item) => setSelectedService(xorBy(selectedService, [item], 'id'))
+      }
+
+
+
+    return (
         <>
 
-            {loading ? <LoadingScreen /> :
+            {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
                 <SafeAreaView style={{ flex: 1 }}>
 
                     <View style={styles.container}>
@@ -177,23 +192,23 @@ const UserAccountScreen = ({ route }) => {
                                         <TextInput style={{ fontSize: 18 }} value={phone} onChangeText={(e) => setPhone(e)} />
                                     </View>
                                 </View>
-                             
+                              
                         
                                 
                                 <View style={styles.field}>
                                     <View style={{ flex: 1, alignItems: 'center' }}>
-                                        <Icon name={'home'} size={30} color="#000" style={styles.icon} />
+                                        <Icon name={'map-marker-outline'} size={30} color="#000" style={styles.icon} />
                                     </View>
 
                                     <View style={{ flex: 3, justifyContent: 'center' }}>
-                                        <Text style={{ color: '#1697c7' }}>{'Address'}</Text>
-                                     
-                                            <TextInput  multiline={true} style={{ fontSize: 18 }} value={address} onChangeText={(e)=>setAddress(e)} />
-                                        
+                                        <Text style={{ color: '#1697c7' }}>{'Location'}</Text>
+                                        {/* <TouchableOpacity onPress={() => navigation.navigate('MechanicLocationScreen')}> */}
+                                            <TextInput editable={false} multiline={true} style={{ fontSize: 18 }} value={address} />
+                                        {/* </TouchableOpacity> */}
 
                                     </View>
                                 </View>
-                                
+                              
                             </View>
                             {isloading ? <ActivityIndicator size={'large'} color={'#1697c7'} /> :
                                 <TouchableOpacity

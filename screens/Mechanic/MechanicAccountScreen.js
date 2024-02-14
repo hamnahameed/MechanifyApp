@@ -24,7 +24,6 @@ import TopBar from '../../components/TopBar';
 import { getTokenFromStorage } from '../../authUtils/authUtils';
 import axios from 'axios';
 import axiosconfig from '../../axios/axios'
-import LoadingScreen from '../Main/LoadingScreen';
 import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
 import { OPTIONS } from './ServicesOptions';
@@ -199,14 +198,14 @@ const MechanicAccountScreen = ({ route }) => {
                                 
                                 <View style={styles.field}>
                                     <View style={{ flex: 1, alignItems: 'center' }}>
-                                        <Icon name={'home'} size={30} color="#000" style={styles.icon} />
+                                        <Icon name={'map-marker-outline'} size={30} color="#000" style={styles.icon} />
                                     </View>
 
                                     <View style={{ flex: 3, justifyContent: 'center' }}>
-                                        <Text style={{ color: '#1697c7' }}>{'Address'}</Text>
-                                        <TouchableOpacity onPress={() => navigation.navigate('MechanicLocationScreen')}>
+                                        <Text style={{ color: '#1697c7' }}>{'Location'}</Text>
+                                        {/* <TouchableOpacity onPress={() => navigation.navigate('MechanicLocationScreen')}> */}
                                             <TextInput editable={false} multiline={true} style={{ fontSize: 18 }} value={address} />
-                                        </TouchableOpacity>
+                                        {/* </TouchableOpacity> */}
 
                                     </View>
                                 </View>

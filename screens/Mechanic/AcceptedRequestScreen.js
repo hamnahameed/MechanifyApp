@@ -10,10 +10,10 @@ import axios from 'axios';
 import axiosconfig from '../../axios/axios'
 import TopBar from '../../components/TopBar';
 import { moderateScale } from 'react-native-size-matters';
-import LoadingScreen from '../Main/LoadingScreen';
 import { ActivityIndicator } from 'react-native-paper';
 import AppContext from '../../Provider/AppContext';
 import Modal from "react-native-modal";
+import Geocoder from 'react-native-geocoding';
 
 
 
@@ -27,6 +27,7 @@ const AcceptedRequestScreen = ({ route }) => {
   const [requestor, setRequestor] = useState({})
   const [isModalAccept, setModalAccept] = useState(false);
   const [isModalReject, setModalReject] = useState(false);
+  const [address, setAddress] = useState("")
   // Handle opening WhatsApp
   const openWhatsApp = () => {
     const phoneNumber = requestor.phoneNum;
@@ -64,10 +65,7 @@ const AcceptedRequestScreen = ({ route }) => {
 
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location.coords);
-
-
-
-      setInitialRegion({
+    setInitialRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         latitudeDelta: 0.005,
@@ -78,6 +76,15 @@ const AcceptedRequestScreen = ({ route }) => {
 
     getLocation();
   }, []);
+  const getAddressFromCoordinates = async (latitude, longitude) => {
+    try {
+      const response = await Geocoder.from(latitude, longitude);
+      const newAddress = response.results[0].formatted_address;
+      setAddress(newAddress);
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,11 +102,19 @@ const AcceptedRequestScreen = ({ route }) => {
         setRequest(res?.data?.data?.request);
         setRequestor(res?.data?.data?.requestor);
         setInitialRegion({
-          latitude: res?.data?.data?.requestor.latitude,
-          longitude: res?.data?.data?.requestor.longitude,
+          latitude: res?.data?.data?.request.latitude,
+          longitude: res?.data?.data?.request.longitude,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         });
+        setInitialRegion({
+          latitude: res?.data?.data?.request.latitude,
+          longitude: res?.data?.data?.request.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        });
+        await getAddressFromCoordinates(res?.data?.data?.request.latitude,res?.data?.data?.request.longitude)
+    
 
 
 
@@ -138,36 +153,7 @@ const AcceptedRequestScreen = ({ route }) => {
     };
   }
 
-  const handleCancel = async () => {
-    try {
-
-      setloading(true);
-      const obj = {
-        currentStatus: 'cancelledbyuser'
-      }
-      console.log(obj, "obj to send");
-
-      const token = await getTokenFromStorage();
-      const response = await axiosconfig.put(`/updateRequest/${request._id}`, obj, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      Alert.alert(response?.data?.message)
-      myContext.setRequestRefresh(!myContext.requestRefresh)
-      setModalVisible(!isModalVisible)
-      navigation.navigate('UserHomeScreen');
-
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        Alert.alert(error.response?.data?.message || "An Error Occured")
-        console.log(error);
-      }
-    } finally {
-      setloading(false);
-    }
-  }
+ 
   const handleAccept = async () => {
     try {
 
@@ -231,9 +217,12 @@ const AcceptedRequestScreen = ({ route }) => {
   }
 
 
+
   return (
     <>
-      {loading ? <LoadingScreen /> :
+      {loading ? <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator color={"#1697c7"} size={'large'}/>
+                </View> :
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.container}>
             <TopBar navigation={navigation} />
@@ -321,21 +310,11 @@ const AcceptedRequestScreen = ({ route }) => {
                         <Text style={{ color: "#FFF", textAlign: 'center', fontSize: 15 }}>{"Reject"}</Text>
                       </TouchableOpacity>
                     </View>
-
-
                   </View>}
-
-
-
                   <View style={{ margin: moderateScale(10) }}>
                     <Text style={styles.dateTime}>Description: </Text>
                     <Text>{request.description}</Text>
                   </View>
-
-
-
-
-
                 </View>
               </View>
               <View style={{ flex: 1, justifyContent: 'flex-end' }}>
@@ -351,7 +330,7 @@ const AcceptedRequestScreen = ({ route }) => {
                   </View>
                   <View style={{ flex: 3, padding: moderateScale(5) }}>
                     <Text style={{ fontSize: 15, color: '#C0C0C0' }}>{requestor.username}</Text>
-                    <Text style={{ fontSize: 10, color: '#C0C0C0' }}>{requestor.address}</Text>
+                    <Text style={{ fontSize: 10, color: '#C0C0C0' }}>{address}</Text>
                   </View>
                   <View style={{ flex: 1 }}>
                     <TouchableOpacity onPress={makePhoneCall} style={styles.phoneButton}>

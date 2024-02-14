@@ -17,7 +17,7 @@ const MechanicDrawerContent = ({ navigation }) => {
   const [isloading, setloading] = useState(false)
   const [modalVisible, setModalVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(true);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => setIsEnabled(!isEnabled);
   const [user, setUser] = useState({})
   const getAddressFromCoordinates = async (latitude, longitude) => {
     try {
